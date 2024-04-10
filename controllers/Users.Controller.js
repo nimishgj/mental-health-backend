@@ -10,6 +10,7 @@ const { generateChangePasswordEmailTemplate } = require("../util/mailTemplates/C
 const { generateForgotPasswordEmailTemplate } = require("../util/mailTemplates/ForgotPassword");
 const { generateVerifyUserEmailTemplate } = require("../util/mailTemplates/VerifyUser");
 const { sendServerError, sendError } = require("../util/Responses");
+const { NODE_ENV } = process.env;
 
 exports.createUser = async (request, response) => {
   try {
@@ -76,24 +77,26 @@ exports.createUser = async (request, response) => {
       LOG_LEVEL.INFO
     );
 
-    const emailTemplate = generateVerifyUserEmailTemplate(OTP);
+    if (NODE_ENV !== 'development') {
+      const emailTemplate = generateVerifyUserEmailTemplate(OTP);
 
-    mailTransport().sendMail(
-      {
-        from: "test.mail.nimish@gmail.com",
-        to: user.email,
-        subject: "Verify your email account",
-        html: emailTemplate,
-      },
-      (err, info) => {
-        if (err) {
-          console.log(err);
-        } else {
-          console.log("sent");
-          console.log(info.response);
+      mailTransport().sendMail(
+        {
+          from: "test.mail.nimish@gmail.com",
+          to: user.email,
+          subject: "Verify your email account",
+          html: emailTemplate,
+        },
+        (err, info) => {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log("sent");
+            console.log(info.response);
+          }
         }
-      }
-    );
+      );
+    }
 
     await user.save();
 
@@ -141,7 +144,7 @@ exports.login = async (request, response) => {
         message: errors,
       });
     }
-    
+
 
     const user = await Users.findOne({ email: email });
     if (!user)
@@ -254,16 +257,16 @@ exports.changePasswordRequest = async (request, response) => {
       errors.username = MESSAGE.USERNAME_NOT_PROVIDED;
     }
     if (Object.keys(errors).length > 0) {
-        return response.status(HTTP_STATUS.BAD_REQUEST).json({
-          status: false,
-          message: errors,
-        });
+      return response.status(HTTP_STATUS.BAD_REQUEST).json({
+        status: false,
+        message: errors,
+      });
     }
 
 
     const user = await Users.findOne({ username: username });
 
-    if (!user) return sendError(response,MESSAGE.USER_NOT_FOUND);
+    if (!user) return sendError(response, MESSAGE.USER_NOT_FOUND);
 
     const OTP = generateOtp();
     const verificationToken = new userVerification({
@@ -281,24 +284,26 @@ exports.changePasswordRequest = async (request, response) => {
       LOG_LEVEL.INFO
     );
 
-    const emailTemplate = generateChangePasswordEmailTemplate(OTP);
+    if (NODE_ENV !== 'development') {
+      const emailTemplate = generateChangePasswordEmailTemplate(OTP);
 
-    mailTransport().sendMail(
-      {
-        from: "test.mail.nimish@gmail.com",
-        to: user.email,
-        subject: "Verify your email account",
-        html:emailTemplate,
-      },
-      (err, info) => {
-        if (err) {
-          console.log(err);
-        } else {
-          console.log("sent");
-          console.log(info.response);
+      mailTransport().sendMail(
+        {
+          from: "test.mail.nimish@gmail.com",
+          to: user.email,
+          subject: "Verify your email account",
+          html: emailTemplate,
+        },
+        (err, info) => {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log("sent");
+            console.log(info.response);
+          }
         }
-      }
-    );
+      );
+    }
     response
       .status(HTTP_STATUS.OK)
       .json({ success: true, message: MESSAGE.EMAIL_SENT });
@@ -317,98 +322,99 @@ exports.changePasswordRequest = async (request, response) => {
 
 
 exports.changePassword = async (request, response) => {
-    try {
-      const { token, password, email } = request.body;
-  
-      const errors = {};
-      if (!token) {
-        errors.token = MESSAGE.TOKEN_NOT_PROVIDED;
-      }
-      if (!password) {
-        errors.password = MESSAGE.PASSWORD_NOT_PROVIDED;
-      }
-      if (!email) {
-        errors.email = MESSAGE.EMAIL_NOT_PROVIDED;
-      }
-      if (Object.keys(errors).length > 0) {
-        return response.status(HTTP_STATUS.BAD_REQUEST).json({
-          status: false,
-          message: errors,
-        });
-      }
-  
-      const user = await Users.findOne({ email: email });
+  try {
+    const { token, password, email } = request.body;
 
-      if (!user) return sendError(response, MESSAGE.USER_NOT_FOUND);
-  
-      const verificationToken = await userVerification.findOne({
-        owner: user.id,
-        token,
-      });
-      if (!verificationToken) return sendError(response, MESSAGE.INVALID_TOKEN_PROVIDED);
-  
-      user.password = password;
-      await user.save();
-      await userVerification.findByIdAndDelete(verificationToken._id);
-  
-      log(
-        request,
-        `${user.name} changed their password`,
-        CONTROLLER.CHANGE_PASSWORD,
-        LOG_TYPE.REQUEST,
-        LOG_LEVEL.INFO
-      );
-      response.send({ success: true, message:MESSAGE.PASSWORD_RESET_SUCCESSFULL});
-    } catch (error) {
-        console.log(error);
-      log(
-        request,
-        MESSAGE.PASSWORD_RESET_ERROR,
-        CONTROLLER.CHANGE_PASSWORD,
-        LOG_TYPE.REQUEST,
-        LOG_LEVEL.ERROR
-      );
-      sendServerError(response);
+    const errors = {};
+    if (!token) {
+      errors.token = MESSAGE.TOKEN_NOT_PROVIDED;
     }
-  };
-
-
-  exports.forgotPasswordRequest = async (request, response) => {
-    try {
-      const { email } = request.body;
-      const errors = {};
-      if (!email) {
-        errors.email = MESSAGE.EMAIL_NOT_PROVIDED;
-      }
-      if (Object.keys(errors).length > 0) {
-        return response.status(HTTP_STATUS.BAD_REQUEST).json({
-          status: false,
-          message: errors,
-        });
-      }
-      
-  
-      const user = await Users.findOne({ email });
-      if (!user) return sendError(response, MESSAGE.USER_NOT_FOUND);
-  
-      const OTP = generateOtp();
-  
-      const verificationToken = new userVerification({
-        owner: user._id,
-        token: OTP,
+    if (!password) {
+      errors.password = MESSAGE.PASSWORD_NOT_PROVIDED;
+    }
+    if (!email) {
+      errors.email = MESSAGE.EMAIL_NOT_PROVIDED;
+    }
+    if (Object.keys(errors).length > 0) {
+      return response.status(HTTP_STATUS.BAD_REQUEST).json({
+        status: false,
+        message: errors,
       });
-  
-      await verificationToken.save();
-  
-      log(
-        request,
-        `${user.name} Generated New Verification Token with ObjectID ${verificationToken._id} for Forgot Password`,
-        CONTROLLER.FORGOT_PASSWORD_REQUEST,
-        LOG_TYPE.REQUEST,
-        LOG_LEVEL.INFO
-      );
+    }
+
+    const user = await Users.findOne({ email: email });
+
+    if (!user) return sendError(response, MESSAGE.USER_NOT_FOUND);
+
+    const verificationToken = await userVerification.findOne({
+      owner: user.id,
+      token,
+    });
+    if (!verificationToken) return sendError(response, MESSAGE.INVALID_TOKEN_PROVIDED);
+
+    user.password = password;
+    await user.save();
+    await userVerification.findByIdAndDelete(verificationToken._id);
+
+    log(
+      request,
+      `${user.name} changed their password`,
+      CONTROLLER.CHANGE_PASSWORD,
+      LOG_TYPE.REQUEST,
+      LOG_LEVEL.INFO
+    );
+    response.send({ success: true, message: MESSAGE.PASSWORD_RESET_SUCCESSFULL });
+  } catch (error) {
+    console.log(error);
+    log(
+      request,
+      MESSAGE.PASSWORD_RESET_ERROR,
+      CONTROLLER.CHANGE_PASSWORD,
+      LOG_TYPE.REQUEST,
+      LOG_LEVEL.ERROR
+    );
+    sendServerError(response);
+  }
+};
+
+
+exports.forgotPasswordRequest = async (request, response) => {
+  try {
+    const { email } = request.body;
+    const errors = {};
+    if (!email) {
+      errors.email = MESSAGE.EMAIL_NOT_PROVIDED;
+    }
+    if (Object.keys(errors).length > 0) {
+      return response.status(HTTP_STATUS.BAD_REQUEST).json({
+        status: false,
+        message: errors,
+      });
+    }
+
+
+    const user = await Users.findOne({ email });
+    if (!user) return sendError(response, MESSAGE.USER_NOT_FOUND);
+
+    const OTP = generateOtp();
+
+    const verificationToken = new userVerification({
+      owner: user._id,
+      token: OTP,
+    });
+
+    await verificationToken.save();
+
+    log(
+      request,
+      `${user.name} Generated New Verification Token with ObjectID ${verificationToken._id} for Forgot Password`,
+      CONTROLLER.FORGOT_PASSWORD_REQUEST,
+      LOG_TYPE.REQUEST,
+      LOG_LEVEL.INFO
+    );
+    if (NODE_ENV !== 'development') {
       const emailTemplate = generateForgotPasswordEmailTemplate(OTP);
-  
+
       mailTransport().sendMail(
         {
           from: "test.mail.nimish@gmail.com",
@@ -425,163 +431,164 @@ exports.changePassword = async (request, response) => {
           }
         }
       );
-      response.status(HTTP_STATUS.OK).json({
-        success: true,
-        message:MESSAGE.EMAIL_SENT,
-      });
-    } catch (error) {
-      log(
-        request,
-        MESSAGE.FORGOT_PASSWORD_VERIFICATION_TOKEN_CREATION_ERROR,
-        CONTROLLER.FORGOT_PASSWORD_REQUEST,
-        LOG_TYPE.REQUEST,
-        LOG_LEVEL.ERROR
-      );
-      sendServerError(response);
     }
-  };
-  
-  exports.forgotPassword = async (request, response) => {
-    try {     
-      const { email, token, password } = request.body;
-        const errors = {}
-        if (!email) {
-          errors.email = MESSAGE.EMAIL_NOT_PROVIDED;
-        }
-        if (!token) {
-          errors.token =MESSAGE.TOKEN_NOT_PROVIDED;
-        }
-        if (!password) {
-          errors.password = MESSAGE.PASSWORD_NOT_PROVIDED;
-        }
-        if (Object.keys(errors).length > 0) {
-            return response.status(HTTP_STATUS.BAD_REQUEST).json({
-              status: false,
-              message: errors,
-            });
-        }
-
-  
-      const user = await Users.findOne({ email });
-      if (!user) return sendError(response, MESSAGE.USER_NOT_FOUND);
-  
-      const verificationToken = await userVerification.findOne({
-        owner: user._id,
-        token,
-      });
-      if (!verificationToken) return sendError(response, MESSAGE.INVALID_TOKEN_PROVIDED);
-  
-      user.password = password;
-      await user.save();
-      await userVerification.findByIdAndDelete(verificationToken._id);
-  
-      log(
-        request,
-        `${user.name} changed their password`,
-        CONTROLLER.FORGOT_PASSWORD,
-        LOG_TYPE.REQUEST,
-        LOG_LEVEL.INFO
-      );
-  
-      response.send({
-        success: true,
-        message: MESSAGE.PASSWORD_RESET_SUCCESSFULL,
-      });
-    } catch (error) {
-      log(
-        request,
-        MESSAGE.PASSWORD_RESET_ERROR,
-        CONTROLLER.FORGOT_PASSWORD,
-        LOG_TYPE.REQUEST,
-        LOG_LEVEL.INFO
-      );
-      sendServerError(response);
-    }
-  };
-  
-  exports.deleteUser = async (request, response) => {
-    try {
-      const { email } = request.body;
-      const errors = {}
-  
-      if (!email) {
-        errors.email = MESSAGE.EMAIL_NOT_PROVIDED;
-      }
-      if (Object.keys(errors).length > 0) {
-        return response.status(HTTP_STATUS.BAD_REQUEST).json({
-          status: false,
-          message: errors,
-        });
-      }
-
-      const user = await Users.findOne({ email: email });
-
-      if (!user) return sendError(response, MESSAGE.USER_NOT_FOUND);
-  
-      await Users.findByIdAndDelete(user.id);
-  
-      log(
-        request,
-        `${user.name} Deleted their Account`,
-        CONTROLLER.DELETE_USER,
-        LOG_TYPE.REQUEST,
-        LOG_LEVEL.INFO
-      );
-      response.send({ success: true, message: MESSAGE.USER_DELETED});
-    } catch (error) {
-        console.log(error);
-      log(
-        request,
-        MESSAGE.USER_DELETION_ERROR,
-        CONTROLLER.DELETE_USER,
-        LOG_TYPE.REQUEST,
-        LOG_LEVEL.INFO
-      );
-      sendServerError(response);
-    }
-  };
-  
-  exports.changeNofiticationPreference = async (request,response) => {
-    try {
-      const userId = request.params.id;
-      const { notificationPreference } = request.body;
-
-      const errors = {};
-      if( !userId ){
-        errors.userId =MESSAGE.USER_ID_NOT_PROVIDED;
-      }
-      if (!notificationPreference){
-        errors.notificationPreference =MESSAGE.NOTIFICATION_PREFERENCE_NOT_PROVIDED;
-      }
-
-      if (Object.keys(errors).length > 0) {
-        return response.status(HTTP_STATUS.BAD_REQUEST).json({
-          status: false,
-          message: errors,
-        });
-      }
-      const user = await Users.findOne({ _id: userId });
-      if (!user) return sendError(response, MESSAGE.USER_NOT_FOUND);
-      user.notificationPreference = notificationPreference;
-      await user.save();
-      log(
-        request,
-        `${user.name} Changed their Notification Preference`,
-        CONTROLLER.CHANGE_NOTIFICATION_PREFERENCE,
-        LOG_TYPE.REQUEST,
-        LOG_LEVEL.INFO
-      )
-      response.send({ success: true, message:MESSAGE.NOTIFICATION_PREFERENCE_CHANGED });
-
-    } catch (error) {
-      log(
-        request,
-        MESSAGE.NOTIFICATION_PREFERENCE_CHANGE_ERROR,
-        CONTROLLER.CHANGE_NOTIFICATION_PREFERENCE,
-        LOG_TYPE.REQUEST,
-        LOG_LEVEL.ERROR
-      );
-      console.log(error);
-      sendServerError(response);
-    }
+    response.status(HTTP_STATUS.OK).json({
+      success: true,
+      message: MESSAGE.EMAIL_SENT,
+    });
+  } catch (error) {
+    log(
+      request,
+      MESSAGE.FORGOT_PASSWORD_VERIFICATION_TOKEN_CREATION_ERROR,
+      CONTROLLER.FORGOT_PASSWORD_REQUEST,
+      LOG_TYPE.REQUEST,
+      LOG_LEVEL.ERROR
+    );
+    sendServerError(response);
   }
+};
+
+exports.forgotPassword = async (request, response) => {
+  try {
+    const { email, token, password } = request.body;
+    const errors = {}
+    if (!email) {
+      errors.email = MESSAGE.EMAIL_NOT_PROVIDED;
+    }
+    if (!token) {
+      errors.token = MESSAGE.TOKEN_NOT_PROVIDED;
+    }
+    if (!password) {
+      errors.password = MESSAGE.PASSWORD_NOT_PROVIDED;
+    }
+    if (Object.keys(errors).length > 0) {
+      return response.status(HTTP_STATUS.BAD_REQUEST).json({
+        status: false,
+        message: errors,
+      });
+    }
+
+
+    const user = await Users.findOne({ email });
+    if (!user) return sendError(response, MESSAGE.USER_NOT_FOUND);
+
+    const verificationToken = await userVerification.findOne({
+      owner: user._id,
+      token,
+    });
+    if (!verificationToken) return sendError(response, MESSAGE.INVALID_TOKEN_PROVIDED);
+
+    user.password = password;
+    await user.save();
+    await userVerification.findByIdAndDelete(verificationToken._id);
+
+    log(
+      request,
+      `${user.name} changed their password`,
+      CONTROLLER.FORGOT_PASSWORD,
+      LOG_TYPE.REQUEST,
+      LOG_LEVEL.INFO
+    );
+
+    response.send({
+      success: true,
+      message: MESSAGE.PASSWORD_RESET_SUCCESSFULL,
+    });
+  } catch (error) {
+    log(
+      request,
+      MESSAGE.PASSWORD_RESET_ERROR,
+      CONTROLLER.FORGOT_PASSWORD,
+      LOG_TYPE.REQUEST,
+      LOG_LEVEL.INFO
+    );
+    sendServerError(response);
+  }
+};
+
+exports.deleteUser = async (request, response) => {
+  try {
+    const { email } = request.body;
+    const errors = {}
+
+    if (!email) {
+      errors.email = MESSAGE.EMAIL_NOT_PROVIDED;
+    }
+    if (Object.keys(errors).length > 0) {
+      return response.status(HTTP_STATUS.BAD_REQUEST).json({
+        status: false,
+        message: errors,
+      });
+    }
+
+    const user = await Users.findOne({ email: email });
+
+    if (!user) return sendError(response, MESSAGE.USER_NOT_FOUND);
+
+    await Users.findByIdAndDelete(user.id);
+
+    log(
+      request,
+      `${user.name} Deleted their Account`,
+      CONTROLLER.DELETE_USER,
+      LOG_TYPE.REQUEST,
+      LOG_LEVEL.INFO
+    );
+    response.send({ success: true, message: MESSAGE.USER_DELETED });
+  } catch (error) {
+    console.log(error);
+    log(
+      request,
+      MESSAGE.USER_DELETION_ERROR,
+      CONTROLLER.DELETE_USER,
+      LOG_TYPE.REQUEST,
+      LOG_LEVEL.INFO
+    );
+    sendServerError(response);
+  }
+};
+
+exports.changeNofiticationPreference = async (request, response) => {
+  try {
+    const userId = request.params.id;
+    const { notificationPreference } = request.body;
+
+    const errors = {};
+    if (!userId) {
+      errors.userId = MESSAGE.USER_ID_NOT_PROVIDED;
+    }
+    if (!notificationPreference) {
+      errors.notificationPreference = MESSAGE.NOTIFICATION_PREFERENCE_NOT_PROVIDED;
+    }
+
+    if (Object.keys(errors).length > 0) {
+      return response.status(HTTP_STATUS.BAD_REQUEST).json({
+        status: false,
+        message: errors,
+      });
+    }
+    const user = await Users.findOne({ _id: userId });
+    if (!user) return sendError(response, MESSAGE.USER_NOT_FOUND);
+    user.notificationPreference = notificationPreference;
+    await user.save();
+    log(
+      request,
+      `${user.name} Changed their Notification Preference`,
+      CONTROLLER.CHANGE_NOTIFICATION_PREFERENCE,
+      LOG_TYPE.REQUEST,
+      LOG_LEVEL.INFO
+    )
+    response.send({ success: true, message: MESSAGE.NOTIFICATION_PREFERENCE_CHANGED });
+
+  } catch (error) {
+    log(
+      request,
+      MESSAGE.NOTIFICATION_PREFERENCE_CHANGE_ERROR,
+      CONTROLLER.CHANGE_NOTIFICATION_PREFERENCE,
+      LOG_TYPE.REQUEST,
+      LOG_LEVEL.ERROR
+    );
+    console.log(error);
+    sendServerError(response);
+  }
+}

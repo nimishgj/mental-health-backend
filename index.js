@@ -4,14 +4,13 @@ const app = express();
 const UserRoutes = require("./routes/UserRoutes");
 const HabitRoutes = require("./routes/HabitRoutes");
 const LogRoutes = require("./routes/LogRoutes");
-const Database = require("./config/Database");
 
+const Database = require("./config/Database");
 require('dotenv').config();
 
+const config = require('./config/' + process.env.NODE_ENV);
 
-const mongoUri = `mongodb://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}?authSource=admin`
-
-const db = new Database(mongoUri, {
+const db = new Database(config.mongoUri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 });
@@ -30,16 +29,12 @@ app.use("/api/v1/users", UserRoutes);
 app.use("/api/v1/habits", HabitRoutes);
 app.use("/api/v1/logs", LogRoutes);
 
+console.log(config)
 
-
-app.listen(3000, () => {
-    try {
-        console.log(
-            "Server is running on port: ",
-            3000,
-            "\nVersion 2.0 Powering Up\nPowered Up.."
-        );
-    } catch (error) {
-        console.log(error);
-    }
+app.listen(config.NODE_PORT, () => {
+    console.log(
+        "Server is running on port: ",
+        config.port,
+        "\nVersion 2.0 Powering Up\nPowered Up.."
+    );
 });
