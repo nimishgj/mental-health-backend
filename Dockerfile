@@ -1,6 +1,7 @@
 FROM node:21.7.1-alpine
 WORKDIR /home/node/app
 COPY package*.json ./
+RUN npm install jest --save-dev
 RUN npm install
 COPY . .
 EXPOSE 3000

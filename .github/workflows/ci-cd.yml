@@ -13,8 +13,21 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
+      - name: Install Node.js Dependencies
+        run: npm install
+
       - name: Build Docker Images
         run: docker-compose build
 
       - name: Run Tests
-        run: docker-compose run --rm express-app npm test
+        run: |
+          docker-compose run --rm \
+            -e DB_HOST=${{ secrets.DB_HOST }} \
+            -e DB_USER=${{ secrets.DB_USER }} \
+            -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
+            -e DB_NAME=${{ secrets.DB_NAME }} \
+            -e DB_PORT=${{ secrets.DB_PORT }} \
+            -e PORT=${{ secrets.PORT_SECRET }} \
+            -e MAIL_USERNAME=${{ secrets.MAIL_USERNAME }} \
+            -e MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }} \
+            express-app npm test
