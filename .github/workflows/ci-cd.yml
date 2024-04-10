@@ -21,7 +21,7 @@ jobs:
 
       - name: Run Tests
         run: |
-          docker-compose run --rm \
+          docker-compose run \
             -e DB_HOST=${{ secrets.DB_HOST }} \
             -e DB_USER=${{ secrets.DB_USER }} \
             -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
@@ -30,4 +30,5 @@ jobs:
             -e PORT=${{ secrets.PORT_SECRET }} \
             -e MAIL_USERNAME=${{ secrets.MAIL_USERNAME }} \
             -e MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }} \
+            -e NODE_ENV=${{ secrets.NODE_ENV}}
             express-app npm test
