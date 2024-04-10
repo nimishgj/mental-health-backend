@@ -2,6 +2,8 @@ const express = require("express");
 const app = express();
 
 const UserRoutes = require("./routes/UserRoutes");
+const HabitRoutes = require("./routes/HabitRoutes");
+const LogRoutes = require("./routes/LogRoutes");
 const Database = require("./config/Database");
 
 require('dotenv').config();
@@ -25,6 +27,8 @@ app.get("/", (request, response) => {
 app.use(express.json());
 
 app.use("/api/v1/users", UserRoutes);
+app.use("/api/v1/habits", HabitRoutes);
+app.use("/api/v1/logs", LogRoutes);
 
 
 
