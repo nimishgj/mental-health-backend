@@ -10,6 +10,8 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${DB_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - mongo_data:/data/db  # Define a volume for MongoDB data persistence
 
   express-app:
     build: .
@@ -39,3 +41,6 @@ services:
       - ME_CONFIG_MONGODB_ADMINUSERNAME=root
       - ME_CONFIG_MONGODB_ADMINPASSWORD=example
       - ME_CONFIG_MONGODB_SERVER=mongo
+
+volumes:
+  mongo_data:  # Define the volume named "mongo_data" for MongoDB data persistence

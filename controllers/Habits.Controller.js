@@ -1,10 +1,11 @@
 const { LOG_LEVEL } = require("../constants/LogLevel");
 const { LOG_TYPE } = require("../constants/LogType");
 const { log } = require("../middleware/logger/logger");
-const Habits = require("../models/Habit.model");
 const { sendServerError } = require("../util/Responses");
 const Users = require("../models/User.model");
 const { CONTROLLER, MESSAGE } = require("../constants/Habits.Constants");
+const HabitsService = require("../services/Habits.Service");
+const { HTTP_STATUS } = require("../constants/HttpStatus");
 
 exports.createHabit = async (request, response) => {
     try {
@@ -25,7 +26,7 @@ exports.createHabit = async (request, response) => {
             errors.userId = MESSAGE.USERID_NOT_PROVIDED;
         }
         if (Object.keys(errors).length > 0) {
-            return response.status(400).json({
+            return response.status(HTTP_STATUS.BAD_REQUEST).json({
                 status: false,
                 message: errors,
             });
@@ -34,13 +35,12 @@ exports.createHabit = async (request, response) => {
 
         const user = await Users.findOne({ _id: userId });
         if (!user) return sendError(response, MESSAGE.USER_NOT_FOUND);
-        const newHabit = new Habits({
+        const newHabit =  await HabitsService.createHabit({
             name: name,
             frequency: frequency,
             notifications: notifications,
             owner: user._id
         })
-        await newHabit.save();
         log(
             request,
             `${user.name} Created a new Habit`,
@@ -48,7 +48,7 @@ exports.createHabit = async (request, response) => {
             LOG_TYPE.REQUEST,
             LOG_LEVEL.INFO
         )
-        return response.status(201).send({
+        return response.status(HTTP_STATUS.CREATED).send({
             status: true,
             data: newHabit,
             message: MESSAGE.HABIT_CREATED
@@ -76,19 +76,13 @@ exports.editHabit = async (request, response) => {
             errors.general = MESSAGE.CANNOT_EDIT_MESSAGE;
         }
         if (Object.keys(errors).length > 0) {
-            return response.status(400).json({
+            return response.status(HTTP_STATUS.BAD_REQUEST).json({
                 status: false,
                 message: errors,
             });
         }
 
-        const habit = await Habits.findById(habitId);
-        if (!habit) return sendError(response, MESSAGE.NO_HABITS_FOUND);
-        if (name) habit.name = name;
-        if (frequency) habit.frequency = frequency;
-        if (notifications) habit.notifications = notifications;
-
-        await habit.save();
+        const updatedHabit = await HabitsService.editHabit(habitId, { name, frequency, notifications });
 
         log(
             request,
@@ -98,10 +92,10 @@ exports.editHabit = async (request, response) => {
             LOG_LEVEL.INFO
         );
 
-        return response.status(200).json({
+        return response.status(HTTP_STATUS.OK).json({
             status: true,
             message: MESSAGE.HABIT_UPDATED,
-            data: habit,
+            data: updatedHabit,
         });
     } catch (error) {
         console.log(error);
@@ -120,8 +114,9 @@ exports.deleteHabit = async (request, response) => {
     try {
         const habitId = request.params.id;
 
-        const habit = await Habits.findByIdAndDelete(habitId);
-        if (!habit) return sendError(response,MESSAGE.NO_HABITS_FOUND);
+        const deletedHabit = await HabitsService.deleteHabit(habitId);
+        if (!deletedHabit) return sendError(response, MESSAGE.NO_HABITS_FOUND);
+
         log(
             request,
             `Habit with ID ${habitId} deleted`,
@@ -130,7 +125,7 @@ exports.deleteHabit = async (request, response) => {
             LOG_LEVEL.INFO
         );
 
-        return response.status(200).json({
+        return response.status(HTTP_STATUS.OK).json({
             status: true,
             message:MESSAGE.HABIT_DELETED,
         });
@@ -151,20 +146,18 @@ exports.getHabitsByUserId = async (request, response) => {
     try {
       const userId = request.params.userId;
       if (!userId) {
-        return response.status(400).json({
+        return response.status(HTTP_STATUS.BAD_REQUEST).json({
           status: false,
           message: MESSAGE.USERID_NOT_PROVIDED,
         });
       }
 
   
-      const habits = await Habits.find({ owner: userId });
-      if (habits.length === 0) {
-        return response.status(404).json({
-          status: false,
-          message: MESSAGE.NO_HABITS_FOR_PROVIDED_USER,
-        });
-      }
+        const habits = await HabitsService.getHabitsByUserId(userId);
+        if (habits.length === 0) {
+            return response.status(HTTP_STATUS.NOT_FOUND).json({ status: false, message: MESSAGE.NO_HABITS_FOR_PROVIDED_USER });
+        }
+
       log(
         request,
         `Habits for user ${userId} retrieved`,

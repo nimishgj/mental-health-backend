@@ -12,6 +12,7 @@ const { CONTROLLER} = require("../constants/Logs.Constants")
 
 const { LOG_TYPE } = require("../constants/LogType");
 const { LOG_LEVEL } = require("../constants/LogLevel");
+const { HTTP_STATUS } = require("../constants/HttpStatus");
 
 exports.sendLogFile = async (request, response) => {
   try {
@@ -111,7 +112,7 @@ exports.getRecentLogs = async (request, response) => {
       LOG_LEVEL.INFO
     );
 
-    response.status(200).json({ success: true, logs });
+    response.status(HTTP_STATUS.OK).json({ success: true, logs });
   } catch (error) {
     log(
       request,

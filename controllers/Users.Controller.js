@@ -1,3 +1,4 @@
+const { HTTP_STATUS } = require("../constants/HttpStatus");
 const { LOG_LEVEL } = require("../constants/LogLevel");
 const { LOG_TYPE } = require("../constants/LogType");
 const { MESSAGE, CONTROLLER } = require("../constants/Users.Constants");
@@ -28,7 +29,7 @@ exports.createUser = async (request, response) => {
       errors.password = MESSAGE.PASSWORD_NOT_PROVIDED;
     }
     if (Object.keys(errors).length > 0) {
-      return response.status(400).json({
+      return response.status(HTTP_STATUS.BAD_REQUEST).json({
         status: false,
         message: errors,
       });
@@ -36,7 +37,7 @@ exports.createUser = async (request, response) => {
 
     const userEmail = await Users.findOne({ email: email });
     if (userEmail)
-      return response.status(400).json({
+      return response.status(HTTP_STATUS.BAD_REQUEST).json({
         status: false,
         message:
           "Email " + email + " is already taken, please choose another email",
@@ -44,7 +45,7 @@ exports.createUser = async (request, response) => {
 
     const userName = await Users.findOne({ username: username });
     if (userName)
-      return response.status(400).json({
+      return response.status(HTTP_STATUS.BAD_REQUEST).json({
         status: false,
         message:
           "Username " +
@@ -104,7 +105,7 @@ exports.createUser = async (request, response) => {
       LOG_LEVEL.INFO
     );
 
-    return response.status(201).json({
+    return response.status(HTTP_STATUS.CREATED).json({
       status: true,
       message: MESSAGE.USER_CREATED,
       user,
@@ -135,7 +136,7 @@ exports.login = async (request, response) => {
       errors.password = MESSAGE.PASSWORD_NOT_PROVIDED;
     }
     if (Object.keys(errors).length > 0) {
-      return response.status(400).json({
+      return response.status(HTTP_STATUS.BAD_REQUEST).json({
         status: false,
         message: errors,
       });
@@ -144,19 +145,19 @@ exports.login = async (request, response) => {
 
     const user = await Users.findOne({ email: email });
     if (!user)
-      return response.status(400).json({
+      return response.status(HTTP_STATUS.BAD_REQUEST).json({
         status: false,
         message: "Email " + email + " is not registered",
       });
     if (!user.isVerified)
-      return response.status(400).json({
+      return response.status(HTTP_STATUS.BAD_REQUEST).json({
         status: false,
         message: MESSAGE.VERIFY_USER,
       });
 
     const isMatch = user.password === password;
     if (!isMatch) {
-      return response.status(400).json({
+      return response.status(HTTP_STATUS.BAD_REQUEST).json({
         status: false,
         message: MESSAGE.INCORRECT_PASSWORD,
       });
@@ -168,7 +169,7 @@ exports.login = async (request, response) => {
         LOG_TYPE.REQUEST,
         LOG_LEVEL.INFO
       );
-      return response.status(200).json({
+      return response.status(HTTP_STATUS.OK).json({
         status: true,
         message: MESSAGE.USER_LOGGED_IN,
         user,
@@ -200,7 +201,7 @@ exports.verifyUser = async (request, response) => {
       errors.username = MESSAGE.USER_ID_NOT_PROVIDED;
     }
     if (Object.keys(errors).length > 0) {
-      return response.status(400).json({
+      return response.status(HTTP_STATUS.BAD_REQUEST).json({
         status: false,
         message: errors,
       });
@@ -253,7 +254,7 @@ exports.changePasswordRequest = async (request, response) => {
       errors.username = MESSAGE.USERNAME_NOT_PROVIDED;
     }
     if (Object.keys(errors).length > 0) {
-        return response.status(400).json({
+        return response.status(HTTP_STATUS.BAD_REQUEST).json({
           status: false,
           message: errors,
         });
@@ -299,7 +300,7 @@ exports.changePasswordRequest = async (request, response) => {
       }
     );
     response
-      .status(200)
+      .status(HTTP_STATUS.OK)
       .json({ success: true, message: MESSAGE.EMAIL_SENT });
   } catch (error) {
     console.log(error);
@@ -330,7 +331,7 @@ exports.changePassword = async (request, response) => {
         errors.email = MESSAGE.EMAIL_NOT_PROVIDED;
       }
       if (Object.keys(errors).length > 0) {
-        return response.status(400).json({
+        return response.status(HTTP_STATUS.BAD_REQUEST).json({
           status: false,
           message: errors,
         });
@@ -380,7 +381,7 @@ exports.changePassword = async (request, response) => {
         errors.email = MESSAGE.EMAIL_NOT_PROVIDED;
       }
       if (Object.keys(errors).length > 0) {
-        return response.status(400).json({
+        return response.status(HTTP_STATUS.BAD_REQUEST).json({
           status: false,
           message: errors,
         });
@@ -424,7 +425,7 @@ exports.changePassword = async (request, response) => {
           }
         }
       );
-      response.status(200).json({
+      response.status(HTTP_STATUS.OK).json({
         success: true,
         message:MESSAGE.EMAIL_SENT,
       });
@@ -454,7 +455,7 @@ exports.changePassword = async (request, response) => {
           errors.password = MESSAGE.PASSWORD_NOT_PROVIDED;
         }
         if (Object.keys(errors).length > 0) {
-            return response.status(400).json({
+            return response.status(HTTP_STATUS.BAD_REQUEST).json({
               status: false,
               message: errors,
             });
@@ -507,7 +508,7 @@ exports.changePassword = async (request, response) => {
         errors.email = MESSAGE.EMAIL_NOT_PROVIDED;
       }
       if (Object.keys(errors).length > 0) {
-        return response.status(400).json({
+        return response.status(HTTP_STATUS.BAD_REQUEST).json({
           status: false,
           message: errors,
         });
@@ -554,7 +555,7 @@ exports.changePassword = async (request, response) => {
       }
 
       if (Object.keys(errors).length > 0) {
-        return response.status(400).json({
+        return response.status(HTTP_STATUS.BAD_REQUEST).json({
           status: false,
           message: errors,
         });
