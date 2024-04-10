@@ -237,3 +237,11 @@ $RECYCLE.BIN/
 .env
 
 todo.txt
+
+# Terraform
+/iac/terraform/**/*.tfstate
+/iac/terraform/**/*.tfstate.*
+/iac/terraform/**/*.tfvars
+/iac/terraform/.terraform/
+/iac/terraform/.terraform.lock.hcl
+!/iac/terraform/secrets.tfvars
