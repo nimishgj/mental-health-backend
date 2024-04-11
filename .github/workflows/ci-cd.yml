@@ -58,9 +58,15 @@ jobs:
 
       - name: Initialize Terraform
         run: terraform init -input=false
-
-      - name: Testing working directory
-        run: pwd
+  
+      - name: Check Terraform Formatting
+        run: terraform fmt -check
+  
+      - name: Validate Terraform
+        run: terraform validate
+  
+      - name: Plan Terraform
+        run: terraform plan -input=false -var-file=secrets.tfvars
 
       - name: Apply Terraform Changes
         run: terraform apply -auto-approve -var-file=secrets.tfvars -auto-approve
