@@ -21,7 +21,17 @@ jobs:
           docker-compose build
         
       - name: Install Node.js Dependencies
-        run: docker-compose run express-app npm install
-
+        run: |
+            docker-compose run \
+              -e MAIL_USERNAME=${{secrets.MAIL_USERNAME}} \
+              -e MAIL_PASSWORD=${{secrets.MAIL_PASSWORD}} \
+              -e NODE_ENV=testing \
+              express-app npm install
+  
       - name: Run Tests
-        run: docker-compose run express-app npm test
+        run: |
+            docker-compose run \
+              -e MAIL_USERNAME=${{secrets.MAIL_USERNAME}} \
+              -e MAIL_PASSWORD=${{secrets.MAIL_PASSWORD}} \
+              -e NODE_ENV=testing \
+              express-app npm test
