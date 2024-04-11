@@ -13,22 +13,18 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Install Node.js Dependencies
-        run: npm install
+      - name: Change Directory
+        run: cd mental-health-backend
 
+        
       - name: Build Docker Images
-        run: docker-compose build
-
+        run: MAIL_USERNAME=${{secrets.MAIL_USERNAME}} \
+             MAIL_PASSWORD=${{secrets.MAIL_PASSWORD}} \
+             NODE_ENV=testing \
+             docker-compose build
+        
+      - name: Install Node.js Dependencies
+        run: docker-compose run express-app npm install
+        
       - name: Run Tests
-        run: |
-          docker-compose run \
-            -e DB_HOST=${{ secrets.DB_HOST }} \
-            -e DB_USER=${{ secrets.DB_USER }} \
-            -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
-            -e DB_NAME=${{ secrets.DB_NAME }} \
-            -e DB_PORT=${{ secrets.DB_PORT }} \
-            -e PORT=${{ secrets.PORT_SECRET }} \
-            -e MAIL_USERNAME=${{ secrets.MAIL_USERNAME }} \
-            -e MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }} \
-            -e NODE_ENV=${{ secrets.NODE_ENV}}
-            express-app npm test
+        run: docker-compose run express-app npm test
