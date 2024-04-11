@@ -1,31 +1,32 @@
 # Create a new VPC in ap-south-1
 resource "aws_vpc" "my_vpc" {
-  cidr_block = "10.0.0.0/16"  # Specify the CIDR block for your VPC
+  cidr_block = "10.0.0.0/16"
   tags = {
-    Name = "test"  # Tag for the VPC
+    Name = "test"
   }
 }
 
 # Create a new subnet within the VPC in ap-south-1
 resource "aws_subnet" "my_subnet" {
-  vpc_id                  = aws_vpc.my_vpc.id  # Reference the ID of the created VPC
-  cidr_block              = "10.0.1.0/24"  # Specify the CIDR block for your subnet
-  availability_zone       = "ap-south-1a"  # Specify the availability zone for your subnet in ap-south-1
+  vpc_id             = aws_vpc.my_vpc.id
+  cidr_block         = "10.0.1.0/24"
+  availability_zone  = "ap-south-1a"
   tags = {
-    Name = "test"  # Tag for the subnet
+    Name = "test"
   }
 }
 
 # Create a new security group allowing inbound traffic on port 3000 in ap-south-1
 resource "aws_security_group" "my_security_group" {
-    name        = "terraform-mental-health"
-  vpc_id = aws_vpc.my_vpc.id  # Reference the ID of the created VPC
+  name = "terraform-mental-health"
+  vpc_id = aws_vpc.my_vpc.id
+
   tags = {
-    Name = "test"  # Tag for the security group
+    Name = "test"
   }
 
   ingress {
-    from_port   = 3000  # Allow inbound traffic on port 3000
+    from_port   = 3000
     to_port     = 3000
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
@@ -41,13 +42,14 @@ resource "aws_security_group" "my_security_group" {
 
 # Create a new EC2 instance in ap-south-1
 resource "aws_instance" "my_ec2_instance" {
-  ami                    = "ami-09298640a92b2d12c"  # Specify the AMI ID for the minimal OS (e.g., Amazon Linux 2)
-  instance_type          = "t2.micro"  # Specify the instance type
-  subnet_id              = aws_subnet.my_subnet.id  # Reference the ID of the created subnet in ap-south-1
-  key_name               = "ec2-ssh"  # Specify the name of your existing SSH key pair
-  vpc_security_group_ids        = [aws_security_group.my_security_group.id]  # Reference the name of the created security group
-  associate_public_ip_address = true  # Assign a public IP address to the EC2 instance
+  ami                    = "ami-09298640a92b2d12c"
+  instance_type          = "t2.micro"
+  subnet_id              = aws_subnet.my_subnet.id
+  key_name               = "ec2-ssh"
+  vpc_security_group_ids = [aws_security_group.my_security_group.id]
+  associate_public_ip_address = true
+
   tags = {
-    Name = "test"  # Tag for the EC2 instance
+    Name = "test"
   }
 }
