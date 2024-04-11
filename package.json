@@ -4,7 +4,7 @@
   "description": "A simple API in which you can create habits, track habits ",
   "main": "index.js",
   "scripts": {
-    "test": "jest --watchAll --verbose",
+    "test": "jest --verbose",
     "dev": "nodemon index.js"
   },
   "author": "Nimisha G J",
