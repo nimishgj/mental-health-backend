@@ -1,6 +1,7 @@
 name: CI/CD Pipeline
 
-on: workflow_dispatch
+on:
+  workflow_dispatch
 
 jobs:
   Tests:
@@ -26,3 +27,15 @@ jobs:
       - name: Run Tests
         run: |
           docker-compose run express-app npm test
+
+  Terraform-Setup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Terraform
+        run: |
+          cd iac/terraform/
+          terraform init
+          terraform apply -var-file=secrets.tfvars -auto-approve
