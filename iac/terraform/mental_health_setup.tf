@@ -1,3 +1,9 @@
+provider "aws" {
+  region     = "ap-south-1"
+  access_key = env("AWS_ACCESS_KEY_ID")
+  secret_key = env("AWS_SECRET_ACCESS_KEY")
+}
+
 # Create a new VPC in ap-south-1
 resource "aws_vpc" "my_vpc" {
   cidr_block = "10.0.0.0/16"
