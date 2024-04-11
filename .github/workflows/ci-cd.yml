@@ -28,7 +28,7 @@ jobs:
         run: |
           docker-compose run express-app npm test
 
-  Terraform-Setup:
+  Infrastructure-Setup:
     runs-on: ubuntu-22.04
     needs: Tests
     if: success()
