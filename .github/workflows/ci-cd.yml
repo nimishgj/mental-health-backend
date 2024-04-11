@@ -52,5 +52,8 @@ jobs:
       - name: Initialize Terraform
         run: terraform init -input=false -backend-config="secrets.tfvars"
 
+      - name: Testing working directory
+        run: pwd
+
       - name: Apply Terraform Changes
         run: terraform apply -auto-approve -var-file=secrets.tfvars -auto-approve
