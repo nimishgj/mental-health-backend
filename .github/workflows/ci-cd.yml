@@ -5,7 +5,7 @@ on:
 
 jobs:
   Tests:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     env:
       MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
@@ -29,15 +29,32 @@ jobs:
           docker-compose run express-app npm test
 
   Terraform-Setup:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: Tests
     if: success()
+    defaults:
+      run:
+        working-directory: iac/terraform
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.8.0
+
       - name: Set up Terraform
-        run: |
-          cd iac/terraform/
-          terraform init
-          terraform apply -var-file=secrets.tfvars -auto-approve
+        run: terraform init -input=false
+
+      - name: Terraform Format
+        run: terraform fmt -check
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        run: terraform plan -input=false
+
+      - name: Apply Terraform
+        run: terraform apply -input=false -auto-approve
