@@ -54,7 +54,13 @@ jobs:
         run: terraform validate
 
       - name: Terraform Plan
-        run: terraform plan -var-file=secrets.tfvars -input=false
+        run: |
+          terraform plan -input=false \
+            -var="access_key=${{ secrets.AWS_ACCESS_KEY_ID }}" \
+            -var="secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}"
 
       - name: Apply Terraform
-        run: terraform apply -var-file=secrets.tfvars -input=false -auto-approve
+        run: |
+          terraform apply -input=false -auto-approve \
+            -var="access_key=${{ secrets.AWS_ACCESS_KEY_ID }}" \
+            -var="secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}"
