@@ -6,8 +6,13 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
+  Tests:
     runs-on: ubuntu-latest
+
+    env:
+      MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
+      MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+      NODE_ENV: testing
 
     steps:
       - name: Checkout Repository
@@ -15,23 +20,12 @@ jobs:
         
       - name: Build Docker Images
         run: |
-          MAIL_USERNAME=${{secrets.MAIL_USERNAME}} \
-          MAIL_PASSWORD=${{secrets.MAIL_PASSWORD}} \
-          NODE_ENV=testing \
           docker-compose build
         
       - name: Install Node.js Dependencies
         run: |
-            docker-compose run \
-              -e MAIL_USERNAME=${{secrets.MAIL_USERNAME}} \
-              -e MAIL_PASSWORD=${{secrets.MAIL_PASSWORD}} \
-              -e NODE_ENV=testing \
-              express-app npm install
+          docker-compose run express-app npm install
   
       - name: Run Tests
         run: |
-            docker-compose run \
-              -e MAIL_USERNAME=${{secrets.MAIL_USERNAME}} \
-              -e MAIL_PASSWORD=${{secrets.MAIL_PASSWORD}} \
-              -e NODE_ENV=testing \
-              express-app npm test
+          docker-compose run express-app npm test
