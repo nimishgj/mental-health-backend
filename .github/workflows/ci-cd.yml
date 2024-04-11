@@ -14,10 +14,11 @@ jobs:
         uses: actions/checkout@v2
         
       - name: Build Docker Images
-        run: MAIL_USERNAME=${{secrets.MAIL_USERNAME}} \
-             MAIL_PASSWORD=${{secrets.MAIL_PASSWORD}} \
-             NODE_ENV=testing \
-             docker-compose build
+        run: |
+          MAIL_USERNAME=${{secrets.MAIL_USERNAME}} \
+          MAIL_PASSWORD=${{secrets.MAIL_PASSWORD}} \
+          NODE_ENV=testing \
+          docker-compose build
         
       - name: Install Node.js Dependencies
         run: docker-compose run express-app npm install
