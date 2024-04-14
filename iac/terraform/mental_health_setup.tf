@@ -1,7 +1,6 @@
 # Create a new security group allowing inbound traffic on port 3000 in ap-south-1
 resource "aws_security_group" "my_security_group" {
   name = "terraform-mental-health"
-  vpc_id = aws_vpc.my_vpc.id
 
   tags = {
     Name = "test"
