@@ -1,6 +1,7 @@
 # Create a new security group allowing inbound traffic on port 3000 in ap-south-1
 resource "aws_security_group" "my_security_group" {
-  name = "terraform-mental-health"
+  name        = "terraform-mental-health"
+  description = "Allow inbound traffic on port 3000"
 
   tags = {
     Name = "test"
@@ -9,6 +10,13 @@ resource "aws_security_group" "my_security_group" {
   ingress {
     from_port   = 3000
     to_port     = 3000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
