@@ -113,7 +113,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd ~/mental-health
-            docker-compose pull
-            docker-compose down
+            git pull --rebase
+            docker-compoes build
             docker-compose up -d
 
