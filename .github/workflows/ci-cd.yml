@@ -112,7 +112,7 @@ jobs:
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            cd ~/mental-health
+            cd ~/mental-health-backend
             git pull --rebase
             docker-compoes build
             docker-compose up -d
