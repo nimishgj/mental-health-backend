@@ -88,6 +88,7 @@ jobs:
 
       - name: Terraform Apply
         run: terraform apply -auto-approve -input=false
+
   Build-and-push-Docker-Image:
     runs-on: ubuntu-22.04
     needs: Infrastructure-Setup
@@ -105,4 +106,32 @@ jobs:
 
       - name: Push Docker Image
         run: docker-compose push
+
+  Deploy-Application:
+    runs-on: ubuntu-22.04
+    needs: Build-and-push-Docker-Image
+    if: success()
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials from AWS account
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE }}
+          aws-region: ${{ secrets.AWS_REGION }}
+          role-session-name: GitHub-OIDC-TERRAFORM
+        
+      - name: SSH into EC2 Instance
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ steps.plan.outputs.ec2_public_ip }}
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd ~/mental-health
+            docker-compose pull
+            docker-compose down
+            docker-compose up -d
 
