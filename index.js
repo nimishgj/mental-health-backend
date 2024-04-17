@@ -28,6 +28,7 @@ app.use(express.json());
 app.use("/api/v1/users", UserRoutes);
 app.use("/api/v1/habits", HabitRoutes);
 app.use("/api/v1/logs", LogRoutes);
+console.log("hey")
 
 console.log(config)
 
