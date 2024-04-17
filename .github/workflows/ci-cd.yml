@@ -108,7 +108,7 @@ jobs:
       - name: SSH into EC2 Instance
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ needs.Infrastructure-Setup.outputs.ec2_public_ip }}
+          host: 65.1.85.236
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
