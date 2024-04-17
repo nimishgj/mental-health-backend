@@ -29,7 +29,7 @@ resource "aws_security_group" "my_security_group" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["YOUR_IP_ADDRESS/32"]  # Replace YOUR_IP_ADDRESS with your actual IP address
+    cidr_blocks = ["0.0.0.0/0"]  # Replace YOUR_IP_ADDRESS with your actual IP address
   }
 
   ingress {
@@ -57,7 +57,7 @@ resource "aws_internet_gateway" "my_igw" {
 }
 
 # Attach the internet gateway to the VPC
-resource "aws_vpc_attachment" "my_igw_attachment" {
+resource "aws_vpc_gateway_attachment" "my_igw_attachment" {
   vpc_id             = aws_vpc.my_vpc.id
   internet_gateway_id = aws_internet_gateway.my_igw.id
 }
