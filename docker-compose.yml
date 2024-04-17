@@ -14,13 +14,12 @@ services:
       - mongo_data:/data/db  # Define a volume for MongoDB data persistence
 
   express-app:
-    image: nimishgj02/mental-health-backend:latest
     build: .
     container_name: mental_health_app
     ports:
       - "3000:3000"
     environment:
-      DB_HOST: ${DB_HOST}
+      DB_HOST: process.env.
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: ${DB_NAME}
