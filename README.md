@@ -29,6 +29,7 @@
 
 #### 2. To run the application:
 ```bash
+    docker-compose build
     docker-compose up
 ```
 
