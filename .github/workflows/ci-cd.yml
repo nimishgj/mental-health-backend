@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
 
 permissions:
-  id-token: write # This is required for aws oidc connection
-  contents: read # This is required for actions/checkout
+  id-token: write
+  contents: read
 
 env:
   TF_LOG: INFO
@@ -47,7 +47,7 @@ jobs:
 
     steps:
       - name: Git checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
       - name: Configure AWS credentials from AWS account
         uses: aws-actions/configure-aws-credentials@v1
@@ -60,6 +60,12 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.2.5
+
+      # Add Docker permissions
+      - name: Add Docker permissions
+        run: |
+          sudo usermod -aG docker $USER
+          sudo chmod 666 /var/run/docker.sock
 
       - name: Terraform fmt
         id: fmt
@@ -96,7 +102,7 @@ jobs:
   
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
   
       - name: Configure AWS credentials from AWS account
         uses: aws-actions/configure-aws-credentials@v1
