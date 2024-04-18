@@ -5,6 +5,18 @@
 1.Node 21.7.1
 2.Express 4.19.2
 
+## Prerequisetes for development 
+
+#### 1. Clone the repository
+```bash
+    git clone https://github.com/nimishgj/mental-health-backend.git
+```
+
+#### 2. Change directory 
+````bash
+    cd mental-health-backend
+````
+
 ## Manual application development local setup
 
 #### 1. Install node dependencies 
