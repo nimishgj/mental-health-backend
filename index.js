@@ -28,14 +28,11 @@ app.use(express.json());
 app.use("/api/v1/users", UserRoutes);
 app.use("/api/v1/habits", HabitRoutes);
 app.use("/api/v1/logs", LogRoutes);
-console.log("hey")
-
-console.log(config)
 
 app.listen(config.NODE_PORT, () => {
     console.log(
         "Server is running on port: ",
-        config.port,
+        config.NODE_PORT,
         "\nVersion 2.0 Powering Up\nPowered Up.."
     );
 });
