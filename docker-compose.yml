@@ -8,23 +8,24 @@ services:
     ports:
       - "27017:27017"
     environment:
-      MONGO_INITDB_ROOT_USERNAME: ${DB_USER}
-      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
     volumes:
-      - mongo_data:/data/db  # Define a volume for MongoDB data persistence
+      - mongo_data:/data/db  
 
   express-app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: mental_health_app
     ports:
       - "3000:3000"
     environment:
-      DB_HOST: process.env.
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_NAME: ${DB_NAME}
-      DB_PORT: ${DB_PORT}
-      PORT: ${NODE_PORT}
+      DB_HOST: mongo
+      DB_USER: root
+      DB_PASSWORD: example
+      DB_PORT: 27017
+      NODE_ENV: ${NODE_ENV}
       MAIL_USERNAME: ${MAIL_USERNAME}
       MAIL_PASSWORD: ${MAIL_PASSWORD}
     depends_on:
@@ -43,4 +44,4 @@ services:
       - ME_CONFIG_MONGODB_SERVER=mongo
 
 volumes:
-  mongo_data:  # Define the volume named "mongo_data" for MongoDB data persistence
+  mongo_data:  
