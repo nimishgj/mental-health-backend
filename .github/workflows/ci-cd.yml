@@ -130,7 +130,6 @@ jobs:
             if [ -d "~/mental-health-backend" ]; then
               cd ~/mental-health-backend
               git pull --rebase
-              docker-compose build
             else
               sudo yum install -y docker
               sudo yum update -y
@@ -143,8 +142,6 @@ jobs:
               docker-compose version
               git clone https://github.com/nimishgj/mental-health-backend.git
               cd mental-health-backend/
-              docker-compose build
-              docker-compose run express-app npm install
             fi
       
             # Populate .env file
@@ -155,4 +152,7 @@ jobs:
             echo "MONGO_EXPRESS_PASSWORD=${{ secrets.MONGO_EXPRESS_PASSWORD }}" >> .env
       
             # Start services
-            docker-compose up -d
+            echo "if conditions done"
+            sudo docker-compose build
+            sudo docker-compose run express-app npm install
+            sudo docker-compose up -d
