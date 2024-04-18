@@ -17,58 +17,6 @@
     cd mental-health-backend
 ````
 
-## Manual application development local setup
-
-#### 1. Install node dependencies 
-```bash
-    npm install
-```
-
-#### 2. Create new Network
-```bash
-    docker network create mental_health_network
-```
-
-#### 3. Start mongo database using docker
-```bash
-docker run -d \
-  --name mental_health_mongo \
-  --network mental_health_network \
-  -p 27017:27017 \
-  -e MONGO_INITDB_ROOT_USERNAME=root \
-  -e MONGO_INITDB_ROOT_PASSWORD=example \
-  --hostname mental_health_mongo \
-  mongo
-
-
-```
-#### 4. Start mongo visual database page
-```bash
-docker run -d \
-  --name mental_health_mongo_express \
-  --network mental_health_network \ 
-  -p 8080:8081 \
-  -e ME_CONFIG_MONGODB_ADMINUSERNAME=root \
-  -e ME_CONFIG_MONGODB_ADMINPASSWORD=example \
-  -e ME_CONFIG_MONGODB_SERVER=mental_health_mongo \ 
-  mongo-express
-
-```
-
-#### 5. Create a .env file at the root path of the application
-```dotenv
-    DB_USER=root
-    DB_PASSWORD=example
-    DB_HOST=mental_health_mongo
-    DB_PORT=27017
-    NODE_ENV=development
-```
-
-#### 6. Start the application server
-```bash
-    npm run dev
-```
-
 ## Docker application development local setup
 
 
