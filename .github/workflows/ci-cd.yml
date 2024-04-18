@@ -121,9 +121,21 @@ jobs:
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            cd ~/mental-health-backend
-            git pull --rebase
-            docker-compose build
+            if [ -d "~/mental-health-backend" ]; then
+              cd ~/mental-health-backend
+              git pull --rebase
+              docker-compose build
+            else
+              git clone https://github.com/nimishgj/mental-health-backend.git
+              cd mental-health-backend/
+              docker-compose build
+              docker-compose run express-app npm install
+            fi
+      
+            # Populate .env file
+            echo "NODE_ENV=production" > .env
+            echo "MAIL_USERNAME=${{ secrets.MAIL_USERNAME }}" >> .env
+            echo "MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}" >> .env
+      
+            # Start services
             docker-compose up -d
-        
-
