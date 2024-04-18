@@ -127,7 +127,7 @@ jobs:
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            if [ -d "~/mental-health-backend" ]; then
+            if [ -d "/home/ec2-user/mental-health-backend" ]; then
               cd ~/mental-health-backend
               git pull --rebase
             else
