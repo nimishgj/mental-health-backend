@@ -111,6 +111,9 @@ jobs:
         run: |
           INSTANCE_IP=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=mental-health" --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
           echo "::set-output name=instance_ip::$INSTANCE_IP"
+
+      - name: Print the EC2 instance IP address
+        run: echo "${{ steps.get_ec2_ip.outputs.instance_ip }}"
   
       - name: SSH into EC2 Instance
         uses: appleboy/ssh-action@master
