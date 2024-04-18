@@ -10,6 +10,10 @@ permissions:
 jobs:
   Destroy-Infrastructure:
     runs-on: ubuntu-22.04
+    defaults:
+        run:
+          shell: bash
+          working-directory: iac/terraform
     
     steps:
       - name: Checkout
@@ -30,6 +34,4 @@ jobs:
         run: terraform init -backend-config="bucket=${AWS_BUCKET_NAME}" -backend-config="key=${AWS_BUCKET_KEY_NAME}" -backend-config="region=${AWS_REGION}"
 
       - name: Terraform Destroy
-        run: |
-          cd iac/terraform
-          terraform destroy -auto-approve -input=false
+        run: terraform destroy -auto-approve -input=false
