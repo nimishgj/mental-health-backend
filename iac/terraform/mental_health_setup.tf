@@ -2,7 +2,7 @@
 resource "aws_vpc" "my_vpc" {
   cidr_block = "10.0.0.0/16"
   tags = {
-    Name = "test"
+    Name = "mental-health"
   }
 }
 
@@ -12,7 +12,7 @@ resource "aws_subnet" "my_subnet" {
   cidr_block        = "10.0.1.0/24"
   availability_zone = "ap-south-1a"
   tags = {
-    Name = "test"
+    Name = "mental-health"
   }
 }
 
@@ -22,7 +22,7 @@ resource "aws_security_group" "my_security_group" {
   vpc_id = aws_vpc.my_vpc.id
 
   tags = {
-    Name = "test"
+    Name = "mental-health"
   }
 
   ingress {
@@ -35,6 +35,13 @@ resource "aws_security_group" "my_security_group" {
   ingress {
     from_port   = 3000
     to_port     = 3000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  
+  ingress {
+    from_port   = 8080
+    to_port     = 8080
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -52,7 +59,7 @@ resource "aws_internet_gateway" "my_igw" {
   vpc_id = aws_vpc.my_vpc.id
 
   tags = {
-    Name = "test"
+    Name = "mental-health"
   }
 }
 
@@ -67,7 +74,7 @@ resource "aws_route_table" "my_route_table" {
   }
 
   tags = {
-    Name = "test"
+    Name = "mental-health"
   }
 }
 
@@ -87,6 +94,6 @@ resource "aws_instance" "my_ec2_instance" {
   associate_public_ip_address = true
 
   tags = {
-    Name = "test"
+    Name = "mental-health"
   }
 }
