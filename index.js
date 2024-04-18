@@ -20,7 +20,7 @@ db.connect().catch((err) =>
 );
 
 app.get("/", (request, response) => {
-    response.status(200).send("Server is UP and Running,Refer the documentation for more information");
+    response.status(200).send("Server is UP and Running");
 });
 
 app.use(express.json());
