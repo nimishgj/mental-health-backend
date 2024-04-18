@@ -126,6 +126,15 @@ jobs:
               git pull --rebase
               docker-compose build
             else
+              sudo yum install -y docker
+              sudo yum update -y
+              sudo yum install -y git
+              sudo usermod -aG docker ec2-user
+              sudo service docker start
+              sudo systemctl enable docker
+              sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+              sudo chmod +x /usr/local/bin/docker-compose
+              docker-compose version
               git clone https://github.com/nimishgj/mental-health-backend.git
               cd mental-health-backend/
               docker-compose build
