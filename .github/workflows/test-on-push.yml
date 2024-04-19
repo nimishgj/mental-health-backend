@@ -29,10 +29,12 @@ jobs:
         run: |
           docker-compose run express-app npm test || exit 0
           echo "::set-output name=exit_code::$?"
+          echo "$?"
         continue-on-error: true
   
       - name: Check if Tests Failed
         run: |
+          echo ${{ steps.run_tests.outputs.exit_code }}
           if [ ${{ steps.run_tests.outputs.exit_code }} -ne 0 ]; then
             echo "Tests failed!"
           else
