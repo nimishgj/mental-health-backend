@@ -28,7 +28,7 @@ describe("Habits Service", () => {
 
       const result = await HabitsService.deleteHabit(habitId);
       
-      expect(result).toBeNaN();
+      expect(result).toEqual(deletedHabit);
       expect(Habits.findByIdAndDelete).toHaveBeenCalledWith(habitId);
     });
 
