@@ -28,8 +28,8 @@ jobs:
       - name: Check if Tests Failed
         run: |
           docker-compose run express-app npm test
-          echo $?
           echo "Check"
+          echo $?
           if [ $? -ne 0 ]; then
             COMMIT_HASH=$(git rev-parse HEAD)
             echo "Tests failed. Rolling back commit ${COMMIT_HASH}..."
