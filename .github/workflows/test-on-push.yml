@@ -26,17 +26,14 @@ jobs:
   
       - name: Run Tests
         run: |
-          docker-compose run express-app npm test
+          TEST_EXIT_CODE=docker-compose run express-app npm test
+          echo "Test exit code: $TEST_EXIT_CODE"
         continue-on-error: true
 
       - name: Check if Tests Failed
         run: |
-          echo $?
-          echo "check"
-          if [ $? -ne 0 ]; then
-            COMMIT_HASH=$(git rev-parse HEAD)
-            echo "Tests failed. Rolling back commit ${COMMIT_HASH}..."
-            git reset --hard HEAD~1
-            git push --force
-            echo "Commit ${COMMIT_HASH} rolled back successfully."
+          if [[ $TEST_EXIT_CODE -ne 0 ]]; then
+            echo "Tests failed!"
+          else
+            echo "Tests passed."
           fi
