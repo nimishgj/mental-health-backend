@@ -24,12 +24,15 @@ jobs:
         run: |
           docker-compose run express-app npm install
   
+      - name: Run Tests
+        run: |
+          docker-compose run express-app npm test
+        continue-on-error: true
 
       - name: Check if Tests Failed
         run: |
-          docker-compose run express-app npm test
-          echo "Check"
           echo $?
+          echo "check"
           if [ $? -ne 0 ]; then
             COMMIT_HASH=$(git rev-parse HEAD)
             echo "Tests failed. Rolling back commit ${COMMIT_HASH}..."
@@ -37,4 +40,3 @@ jobs:
             git push --force
             echo "Commit ${COMMIT_HASH} rolled back successfully."
           fi
-        continue-on-error: true
