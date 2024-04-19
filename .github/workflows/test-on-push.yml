@@ -35,5 +35,18 @@ jobs:
     if: ${{ failure() }}
 
     steps:
-      - name: echos string
-        run: echo "hello"
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Extract committer's email
+        id: extract_email
+        run: |
+          COMITTER_EMAIL=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/commits/${{ github.sha }}" | jq -r '.commit.author.email')
+          echo "::set-output name=email::$COMITTER_EMAIL"
+
+      - name: Send email notification on failure
+        if: failure()
+        run: |
+          echo "Your workflow failed on branch ${{ github.ref }} at commit ${{ github.sha }}. Please check the workflow logs for details." | mail -s "Workflow Failed" ${{ steps.extract_email.outputs.email }}
+
+
