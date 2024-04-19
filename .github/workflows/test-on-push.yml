@@ -6,30 +6,35 @@ on:
       - main
 
 jobs:
-  test:
+  tests:
     runs-on: ubuntu-latest
 
+    env:
+      NODE_ENV: testing
+
     steps:
-      - name: Checkout code
+      - name: Checkout Repository
         uses: actions/checkout@v2
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14'
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run tests
-        run: npm test
+        
+      - name: Build Docker Images
+        run: |
+          docker-compose build
+        
+      - name: Install Node.js Dependencies
+        run: |
+          docker-compose run express-app npm install
+  
+      - name: Run Tests
+        run: |
+          docker-compose run express-app npm test
         continue-on-error: true
 
-      - name: Check if tests failed
+      - name: Check if Tests Failed
         run: |
           if [ ${{ job.status }} != 'success' ]; then
-            echo "Tests failed. Rolling back commit..."
+            COMMIT_HASH=$(git rev-parse HEAD)
+            echo "Tests failed. Rolling back commit ${COMMIT_HASH}..."
             git reset --hard HEAD~1
             git push --force
-            echo "Commit rolled back successfully."
+            echo "Commit ${COMMIT_HASH} rolled back successfully."
           fi
