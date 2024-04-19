@@ -36,3 +36,4 @@ jobs:
             git push --force
             echo "Commit ${COMMIT_HASH} rolled back successfully."
           fi
+        continue-on-error: true
