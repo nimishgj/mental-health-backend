@@ -31,7 +31,7 @@ jobs:
 
       - name: Check if Tests Failed
         run: |
-          if [ ${{ job.status }} != 'success' ]; then
+          if [ $? -ne 0 ]; then
             COMMIT_HASH=$(git rev-parse HEAD)
             echo "Tests failed. Rolling back commit ${COMMIT_HASH}..."
             git reset --hard HEAD~1
