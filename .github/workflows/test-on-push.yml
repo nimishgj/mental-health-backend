@@ -28,3 +28,12 @@ jobs:
         id: run_tests
         run: |
           docker-compose run express-app npm test 
+          
+  echos:
+    runs-on: ubuntu-latest
+    needs: tests
+    if: ${{ failure() }}
+
+    steps:
+      - name: echos string
+        run: echo "hello"
