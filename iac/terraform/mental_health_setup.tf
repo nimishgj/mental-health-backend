@@ -1,13 +1,3 @@
-variable "file_system_id" {
-  type    = string
-  default = "fs-0b52439c6a0efd436"
-}
-
-variable "efs_mount_point" {
-  type    = string
-  default = "/mnt/efs"
-}
-
 resource "aws_instance" "my_ec2_instance" {
   ami                    = "ami-09298640a92b2d12c"
   instance_type          = "t2.micro"
