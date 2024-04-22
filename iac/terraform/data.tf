@@ -9,7 +9,6 @@ data "template_file" "user_data" {
 
 variable "file_system_id_1" {
   type    = string
-  default = "fs-0b52439c6a0efd436"
 }
 
 variable "efs_mount_point_1" {

@@ -35,6 +35,10 @@ POLICY
 }
 
 resource "aws_instance" "my_ec2_instance" {
+  depends_on = [data.template_file.user_data]
+
+  count = var.file_system_id_1 != "" ? 1 : 0
+
   ami                    = local.ami_id
   instance_type          = local.instance_type
   subnet_id              = local.subnet_id
