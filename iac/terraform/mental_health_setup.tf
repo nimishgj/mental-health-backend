@@ -1,11 +1,11 @@
 variable "file_system_id" {
   type    = string
-  default = "fs-02e0de1641eb0481f"
+  default = "fs-0b52439c6a0efd436"
 }
 
 variable "efs_mount_point" {
   type    = string
-  default = "/mnt/efs/fs1"
+  default = "/mnt/efs"
 }
 
 resource "aws_instance" "my_ec2_instance" {
