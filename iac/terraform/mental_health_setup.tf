@@ -1,22 +1,12 @@
-variable "file_system_id_1" {
-  type    = string
-  default = "fs-0b52439c6a0efd436"
-}
-
-variable "efs_mount_point_1" {
-  type    = string
-  default = "/mnt/efs"
-}
-
 resource "aws_instance" "my_ec2_instance" {
-  ami                    = "ami-09298640a92b2d12c"
-  instance_type          = "t2.micro"
-  subnet_id              = "subnet-0106b0e347e5e6227"
-  key_name               = "ec2-ssh"
-  vpc_security_group_ids = ["sg-0e9471f0e58bb18a9","sg-0e9471f0e58bb18a9"]
+  ami                    = local.ami_id
+  instance_type          = local.instance_type
+  subnet_id              = local.subnet_id
+  key_name               = local.key_name
+  vpc_security_group_ids = [local.customized_security_group,local.nfs_security_group]
   associate_public_ip_address = true
   user_data               = data.template_file.user_data.rendered
   tags = {
-    Name = "mental-health"
+    Name = local.tag_name
   }
 }
