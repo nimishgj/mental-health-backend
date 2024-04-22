@@ -9,6 +9,7 @@ data "template_file" "user_data" {
 
 variable "file_system_id_1" {
   type    = string
+  default = ""
 }
 
 variable "efs_mount_point_1" {
