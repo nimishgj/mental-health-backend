@@ -13,7 +13,7 @@ resource "aws_instance" "my_ec2_instance" {
   instance_type          = "t2.micro"
   subnet_id              = "subnet-0106b0e347e5e6227"
   key_name               = "ec2-ssh"
-  vpc_security_group_ids = ["sg-0e9471f0e58bb18a9", "sg-0f604b6c04a69c1f6"]
+  vpc_security_group_ids = ["sg-0e9471f0e58bb18a9"]
   associate_public_ip_address = true
   user_data               = data.template_file.user_data.rendered
   tags = {
