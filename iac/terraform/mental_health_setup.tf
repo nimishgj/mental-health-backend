@@ -20,10 +20,3 @@ resource "aws_instance" "my_ec2_instance" {
     Name = "mental-health"
   }
 }
-
-
-resource "aws_efs_mount_target" "efs_mount_target" {
-  count          = 1
-  file_system_id = "fs-02e0de1641eb0481f"
-  subnet_id      = "subnet-0106b0e347e5e6227"
-}
