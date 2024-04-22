@@ -1,8 +1,6 @@
 resource "aws_efs_file_system" "my_efs" {
   creation_token = "my-efs"
-  lifecycle {
-    prevent_destroy = true
-  }
+
   encrypted            = true
   performance_mode     = "generalPurpose"
   throughput_mode      = "bursting"
