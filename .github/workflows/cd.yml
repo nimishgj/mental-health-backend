@@ -159,3 +159,5 @@ jobs:
             sudo docker-compose build
             sudo docker-compose run express-app npm install
             sudo docker-compose up -d
+            sudo docker-compose down
+            sudo docker-compose up -d

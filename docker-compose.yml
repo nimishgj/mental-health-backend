@@ -11,7 +11,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
     volumes:
-      - /mnt/efs/mongo_data:/data/db  
+      - mongo_data:/data/db  
 
   express-app:
     build:
@@ -46,4 +46,8 @@ services:
       - ME_CONFIG_BASICAUTH_PASSWORD=${MONGO_EXPRESS_PASSWORD}
 
 volumes:
-  mongo_data:  
+  mongo_data:
+    driver_opts:
+      type: nfs4
+      o: addr=172.31.39.49,rw
+      device: ":/"
