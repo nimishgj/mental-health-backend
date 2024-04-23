@@ -155,4 +155,4 @@ jobs:
             echo "MONGO_EXPRESS_PASSWORD=${{ secrets.MONGO_EXPRESS_PASSWORD }}" >> .env
       
             # Start services
-            docker-compose -f docker-compose.prod.yml up -d
+            sudo docker-compose -f docker-compose.prod.yml up -d
