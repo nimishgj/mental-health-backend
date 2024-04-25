@@ -64,7 +64,8 @@ jobs:
 
   Rollback-Commit:
     runs-on: ubuntu-latest
-    needs: Notify
+    needs: tests
+    if: ${{ failure() }}
   
     steps:
       - name: Checkout code
