@@ -78,5 +78,4 @@ jobs:
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git revert --no-edit HEAD
-          git push 
-          
+          git push https://${{ secrets.PERSONAL_TOKEN }}@github.com/${{ github.repository }} main
