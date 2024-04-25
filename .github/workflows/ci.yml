@@ -73,5 +73,6 @@ jobs:
   
       - name: Rollback commit
         run: |
-          git reset --hard HEAD~1  # Revert the last commit
-          git push origin main     # Push the changes to the main branch
+          git revert HEAD --no-edit  
+          git push origin main   
+          
