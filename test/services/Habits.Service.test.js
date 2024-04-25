@@ -1,7 +1,7 @@
 const HabitsService = require("../../services/Habits.Service");
 const Habits = require("../../models/Habit.model");
 
-// Mock the Habit model methods
+
 jest.mock("../../models/Habit.model");
 
 describe("Habits Service", () => {
@@ -17,7 +17,7 @@ describe("Habits Service", () => {
       expect(Habits.mock.instances[0].save).toHaveBeenCalled();
     });
     
-    // Add more test cases as needed
+
   });
 
   describe("deleteHabit", () => {
@@ -32,7 +32,7 @@ describe("Habits Service", () => {
       expect(Habits.findByIdAndDelete).toHaveBeenCalledWith(habitId);
     });
 
-    // Add more test cases as needed
+
   });
 
   describe("getHabitsByUserId", () => {
@@ -50,6 +50,6 @@ describe("Habits Service", () => {
       expect(Habits.find).toHaveBeenCalledWith({ owner: userId });
     });
 
-    // Add more test cases as needed
+
   });
 });
