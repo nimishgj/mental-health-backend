@@ -66,13 +66,17 @@ jobs:
     runs-on: ubuntu-latest
     needs: tests
     if: ${{ failure() }}
-  
-    steps:
-      - name: Checkout code
+
+    steps: 
+      - name: Checkout branch
         uses: actions/checkout@v2
-  
-      - name: Rollback commit
+        with:
+           ref: ${{ github.event.inputs.branch }}
+           fetch-depth: 0
+      - name: Revert pushed commit
         run: |
-          git revert HEAD --no-edit  
-          git push origin main   
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git revert --no-edit HEAD
+          git push 
           
