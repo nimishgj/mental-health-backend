@@ -61,3 +61,17 @@ jobs:
           to: ${{ steps.extract_email.outputs.EMAIL }}
           from: Nimisha G J
           body: "Tests failed for the repository: ${GITHUB_REPOSITORY}. Please check the workflow for more details."
+
+  Rollback-Commit:
+    runs-on: ubuntu-latest
+    needs: Notify
+    if: ${{ success() }}
+  
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+  
+      - name: Rollback commit
+        run: |
+          git reset --hard HEAD~1  # Revert the last commit
+          git push origin main     # Push the changes to the main branch
