@@ -45,7 +45,8 @@ jobs:
           echo ::set-output name=EMAIL::$EMAIL
 
       - name: Echo extracted email
-        run: echo "Extracted email: ${{ steps.extract_email.outputs.EMAIL }}"
+        run: |
+          echo "Extracted email: ${{ steps.extract_email.outputs.EMAIL }}"
 
       - name: Send email notification on test failure
         uses: dawidd6/action-send-mail@v3
