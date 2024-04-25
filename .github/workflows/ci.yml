@@ -47,7 +47,7 @@ jobs:
       - name: Send email notification on test failure
         uses: dawidd6/action-send-mail@v3
         with:
-          connection_url: "smtp+tls://${{secrets.MAIL_USERNAME}}:${{secrets.MAIL_PASSWORD}}@smtp.gmail.com:587"
+          connection_url: "smtp://${{secrets.MAIL_USERNAME}}:${{secrets.MAIL_PASSWORD}}@smtp.gmail.com:587"
           server_address: smtp.gmail.com
           server_port: 587
           secure: true
@@ -56,4 +56,3 @@ jobs:
           subject: "Tests failed in ${GITHUB_REPOSITORY}"
           from: Nimisha G J
           body: "Tests failed for the repository: ${GITHUB_REPOSITORY}. Please check the workflow for more details."
-        
