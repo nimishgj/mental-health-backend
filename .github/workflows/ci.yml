@@ -54,5 +54,6 @@ jobs:
           username: ${{secrets.MAIL_USERNAME}}
           password: ${{secrets.MAIL_PASSWORD}}
           subject: "Tests failed in ${GITHUB_REPOSITORY}"
+          to: ${{ steps.extract_email.outputs.EMAIL }}
           from: Nimisha G J
           body: "Tests failed for the repository: ${GITHUB_REPOSITORY}. Please check the workflow for more details."
