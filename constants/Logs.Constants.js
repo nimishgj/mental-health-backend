@@ -1,7 +1,8 @@
 exports.MESSAGE ={
     DOWNLOAD_ERROR:"Error occured while downloading th log file",
     FETCH_ERROR:"Error occured while fetching th log file",
-    NO_LOGS_FOUND:"No Logs found"
+    NO_LOGS_FOUND:"No Logs found",
+    USER_NOT_FOUND: "No Such user found"
   }
 
 exports.CONTROLLER = {
