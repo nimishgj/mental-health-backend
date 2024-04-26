@@ -1,7 +1,7 @@
 const { LOG_LEVEL } = require("../constants/LogLevel");
 const { LOG_TYPE } = require("../constants/LogType");
 const { log } = require("../middleware/logger/logger");
-const { sendServerError } = require("../util/Responses");
+const { sendServerError, sendError } = require("../util/Responses");
 const Users = require("../models/User.model");
 const { CONTROLLER, MESSAGE } = require("../constants/Habits.Constants");
 const HabitsService = require("../services/Habits.Service");
@@ -68,7 +68,7 @@ exports.createHabit = async (request, response) => {
 
 exports.editHabit = async (request, response) => {
     try {
-        const { name, frequency, notifications } = request.body; // Optional fields for editing
+        const { name, frequency, notifications } = request.body;
         const habitId = request.params.id;
 
         const errors = {};
