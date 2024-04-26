@@ -18,6 +18,9 @@ exports.sendLogFile = async (request, response) => {
   try {
     const userId = request.body.userId
     const user = await Users.findById({ _id: userId });
+    if (!user) {
+      sendError(response, MESSAGE.USER_NOT_FOUND);
+    }
     const logs = await logModel.find({});
 
     if (logs.length === 0) {
@@ -98,6 +101,9 @@ exports.getRecentLogs = async (request, response) => {
     const userId = request.user._id.toString();
 
     const user = await Users.findById({ _id: userId });
+    if (!user) {
+      sendError(response, MESSAGE.USER_NOT_FOUND);
+    }
 
     const logs = await logModel.find({}).sort({ _id: -1 }).limit(10);
     if (logs.length === 0) {
