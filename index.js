@@ -15,8 +15,6 @@ const db = new Database(config.mongoUri, {
     useUnifiedTopology: true,
 });
 
-const func = async (request, response) => {
-}
 db.connect().catch((err) =>
     console.error("Error connecting to database:", err)
 );
