@@ -15,26 +15,6 @@ const { NODE_ENV } = process.env;
 exports.createUser = async (request, response) => {
   try {
     const { name, username, email, password } = request.body;
-    const errors = {};
-
-    if (!name) {
-      errors.username = MESSAGE.NAME_NOT_PROVIDED;
-    }
-    if (!username) {
-      errors.username = MESSAGE.USERNAME_NOT_PROVIDED;
-    }
-    if (!email) {
-      errors.email = MESSAGE.EMAIL_NOT_PROVIDED;
-    }
-    if (!password) {
-      errors.password = MESSAGE.PASSWORD_NOT_PROVIDED;
-    }
-    if (Object.keys(errors).length > 0) {
-      return response.status(HTTP_STATUS.BAD_REQUEST).json({
-        status: false,
-        message: errors,
-      });
-    }
 
     const userEmail = await Users.findOne({ email: email });
     if (userEmail)
