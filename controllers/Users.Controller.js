@@ -110,22 +110,7 @@ exports.createUser = async (request, response) => {
 exports.login = async (request, response) => {
   try {
     const { email, password } = request.body;
-    const errors = {};
-
-    if (!email) {
-      errors.email = MESSAGE.EMAIL_NOT_PROVIDED;
-    }
-    if (!password) {
-      errors.password = MESSAGE.PASSWORD_NOT_PROVIDED;
-    }
-    if (Object.keys(errors).length > 0) {
-      return response.status(HTTP_STATUS.BAD_REQUEST).json({
-        status: false,
-        message: errors,
-      });
-    }
-
-
+    
     const user = await Users.findOne({ email: email });
     if (!user)
       return response.status(HTTP_STATUS.BAD_REQUEST).json({
