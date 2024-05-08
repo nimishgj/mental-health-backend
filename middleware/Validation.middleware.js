@@ -1,5 +1,4 @@
 const { HTTP_STATUS } = require("../constants/HttpStatus") ;
-const { userSchema } = require('../validations/UserValidation');
 
 exports.validate = (schema) => {
   return (request, response, next) => {
