@@ -4,6 +4,7 @@ const { signUpSignInLimiter } = require('../middleware/limiter/limiter');
 const { validate } = require('../middleware/Validation.middleware');
 const { userSchema } = require('../validations/UserValidation');
 const { userVerificationSchema } = require('../validations/UserVerification');
+const { userLoginSchema } = require('../validations/UserLoginSchema');
 const router = express.Router();
 
 
@@ -15,7 +16,7 @@ router.route("/changePassword").post(changePassword)
 router.route("/forgotPassword").get(forgotPasswordRequest)
 router.route("/changePassword").post(forgotPassword)
 
-router.route("/login").post(signUpSignInLimiter,login)
+router.route("/login").post(signUpSignInLimiter,validate(userLoginSchema), login)
 
 router.route("/:id/notification-preference").patch(changeNofiticationPreference)
 module.exports = router;
