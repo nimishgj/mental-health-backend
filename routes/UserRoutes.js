@@ -1,12 +1,13 @@
 const express = require('express');
 const { createUser, login, verifyUser, changePasswordRequest, changePassword, changeNofiticationPreference, forgotPasswordRequest, forgotPassword } = require('../controllers/Users.Controller');
 const { signUpSignInLimiter } = require('../middleware/limiter/limiter');
-const { validateUser } = require('../middleware/Validation.middleware');
+const { validate } = require('../middleware/Validation.middleware');
+const { userSchema } = require('../validations/UserValidation');
 const router = express.Router();
 
 
-router.route("/").post(signUpSignInLimiter,validateUser,createUser)
 router.route("/").put(verifyUser)
+router.route("/").post(signUpSignInLimiter, validate(userSchema), createUser)
 router.route("/changePassword").get(changePasswordRequest)
 router.route("/changePassword").post(changePassword)
 
