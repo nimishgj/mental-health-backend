@@ -3,11 +3,12 @@ const { createUser, login, verifyUser, changePasswordRequest, changePassword, ch
 const { signUpSignInLimiter } = require('../middleware/limiter/limiter');
 const { validate } = require('../middleware/Validation.middleware');
 const { userSchema } = require('../validations/UserValidation');
+const { userVerificationSchema } = require('../validations/UserVerification');
 const router = express.Router();
 
 
-router.route("/").put(verifyUser)
 router.route("/").post(signUpSignInLimiter, validate(userSchema), createUser)
+router.route("/").put(validate(userVerificationSchema), verifyUser)
 router.route("/changePassword").get(changePasswordRequest)
 router.route("/changePassword").post(changePassword)
 
