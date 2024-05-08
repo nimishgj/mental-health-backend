@@ -175,20 +175,6 @@ exports.login = async (request, response) => {
 exports.verifyUser = async (request, response) => {
   try {
     const { token, userId } = request.body;
-    const errors = {};
-
-    if (!token) {
-      errors.token = MESSAGE.TOKEN_NOT_PROVIDED;
-    }
-    if (!userId) {
-      errors.username = MESSAGE.USER_ID_NOT_PROVIDED;
-    }
-    if (Object.keys(errors).length > 0) {
-      return response.status(HTTP_STATUS.BAD_REQUEST).json({
-        status: false,
-        message: errors,
-      });
-    }
 
     const user = await Users.findById(userId);
     if (!user) return sendError(response, MESSAGE.USER_NOT_FOUND);
