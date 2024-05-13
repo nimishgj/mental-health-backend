@@ -2,22 +2,19 @@ const express = require('express');
 const { createUser, login, verifyUser, changePasswordRequest, changePassword, changeNofiticationPreference, forgotPasswordRequest, forgotPassword } = require('../controllers/Users.Controller');
 const { signUpSignInLimiter } = require('../middleware/limiter/limiter');
 const { validate } = require('../middleware/Validation.middleware');
-const { userSchema } = require('../validations/UserValidation');
-const { userVerificationSchema } = require('../validations/UserVerification');
-const { userLoginSchema } = require('../validations/UserLoginSchema');
+const { userVerificationSchema, userSchema ,userLoginSchema, changePasswordRequestSchema, changePasswordSchema, forgotPasswordRequestSchema, changeNotificationPreferenceSchema, } = require('../validations/Users.validation');
 const router = express.Router();
-
 
 router.route("/").post(signUpSignInLimiter, validate(userSchema), createUser)
 router.route("/").put(validate(userVerificationSchema), verifyUser)
-router.route("/changePassword").get(changePasswordRequest)
-router.route("/changePassword").post(changePassword)
+router.route("/changePassword").get(validate(changePasswordRequestSchema), changePasswordRequest)
+router.route("/changePassword").post(validate(changePasswordSchema), changePassword)
 
-router.route("/forgotPassword").get(forgotPasswordRequest)
-router.route("/changePassword").post(forgotPassword)
+router.route("/forgotPassword").get(validate(forgotPasswordRequestSchema), forgotPasswordRequest)
+router.route("/changePassword").post(validate(changePasswordSchema), forgotPassword)
 
 router.route("/login").post(signUpSignInLimiter,validate(userLoginSchema), login)
 
-router.route("/:id/notification-preference").patch(changeNofiticationPreference)
+router.route("/:id/notification-preference").patch(validate(changeNotificationPreferenceSchema), changeNofiticationPreference)
 module.exports = router;
 
