@@ -98,7 +98,7 @@ exports.sendLogFile = async (request, response) => {
 
 exports.getRecentLogs = async (request, response) => {
   try {
-    const userId = request.user._id.toString();
+    const userId = request.body.userId;
 
     const user = await Users.findById({ _id: userId });
     if (!user) {
