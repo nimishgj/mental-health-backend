@@ -203,17 +203,6 @@ exports.verifyUser = async (request, response) => {
 exports.changePasswordRequest = async (request, response) => {
   try {
     const { username } = request.body;
-    const errors = {};
-    if (!username) {
-      errors.username = MESSAGE.USERNAME_NOT_PROVIDED;
-    }
-    if (Object.keys(errors).length > 0) {
-      return response.status(HTTP_STATUS.BAD_REQUEST).json({
-        status: false,
-        message: errors,
-      });
-    }
-
 
     const user = await Users.findOne({ username: username });
 
@@ -276,23 +265,6 @@ exports.changePassword = async (request, response) => {
   try {
     const { token, password, email } = request.body;
 
-    const errors = {};
-    if (!token) {
-      errors.token = MESSAGE.TOKEN_NOT_PROVIDED;
-    }
-    if (!password) {
-      errors.password = MESSAGE.PASSWORD_NOT_PROVIDED;
-    }
-    if (!email) {
-      errors.email = MESSAGE.EMAIL_NOT_PROVIDED;
-    }
-    if (Object.keys(errors).length > 0) {
-      return response.status(HTTP_STATUS.BAD_REQUEST).json({
-        status: false,
-        message: errors,
-      });
-    }
-
     const user = await Users.findOne({ email: email });
 
     if (!user) return sendError(response, MESSAGE.USER_NOT_FOUND);
@@ -332,17 +304,6 @@ exports.changePassword = async (request, response) => {
 exports.forgotPasswordRequest = async (request, response) => {
   try {
     const { email } = request.body;
-    const errors = {};
-    if (!email) {
-      errors.email = MESSAGE.EMAIL_NOT_PROVIDED;
-    }
-    if (Object.keys(errors).length > 0) {
-      return response.status(HTTP_STATUS.BAD_REQUEST).json({
-        status: false,
-        message: errors,
-      });
-    }
-
 
     const user = await Users.findOne({ email });
     if (!user) return sendError(response, MESSAGE.USER_NOT_FOUND);
@@ -402,23 +363,6 @@ exports.forgotPasswordRequest = async (request, response) => {
 exports.forgotPassword = async (request, response) => {
   try {
     const { email, token, password } = request.body;
-    const errors = {}
-    if (!email) {
-      errors.email = MESSAGE.EMAIL_NOT_PROVIDED;
-    }
-    if (!token) {
-      errors.token = MESSAGE.TOKEN_NOT_PROVIDED;
-    }
-    if (!password) {
-      errors.password = MESSAGE.PASSWORD_NOT_PROVIDED;
-    }
-    if (Object.keys(errors).length > 0) {
-      return response.status(HTTP_STATUS.BAD_REQUEST).json({
-        status: false,
-        message: errors,
-      });
-    }
-
 
     const user = await Users.findOne({ email });
     if (!user) return sendError(response, MESSAGE.USER_NOT_FOUND);
@@ -460,17 +404,6 @@ exports.forgotPassword = async (request, response) => {
 exports.deleteUser = async (request, response) => {
   try {
     const { email } = request.body;
-    const errors = {}
-
-    if (!email) {
-      errors.email = MESSAGE.EMAIL_NOT_PROVIDED;
-    }
-    if (Object.keys(errors).length > 0) {
-      return response.status(HTTP_STATUS.BAD_REQUEST).json({
-        status: false,
-        message: errors,
-      });
-    }
 
     const user = await Users.findOne({ email: email });
 
@@ -504,20 +437,6 @@ exports.changeNofiticationPreference = async (request, response) => {
     const userId = request.params.id;
     const { notificationPreference } = request.body;
 
-    const errors = {};
-    if (!userId) {
-      errors.userId = MESSAGE.USER_ID_NOT_PROVIDED;
-    }
-    if (!notificationPreference) {
-      errors.notificationPreference = MESSAGE.NOTIFICATION_PREFERENCE_NOT_PROVIDED;
-    }
-
-    if (Object.keys(errors).length > 0) {
-      return response.status(HTTP_STATUS.BAD_REQUEST).json({
-        status: false,
-        message: errors,
-      });
-    }
     const user = await Users.findOne({ _id: userId });
     if (!user) return sendError(response, MESSAGE.USER_NOT_FOUND);
     user.notificationPreference = notificationPreference;
