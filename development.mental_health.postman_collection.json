@@ -1,0 +1,374 @@
+{
+	"info": {
+		"_postman_id": "2e5bb2b4-8a1a-4d9a-8f41-32c635aebf56",
+		"name": "development",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28314605",
+		"_collection_link": "https://galactic-eclipse-336609.postman.co/workspace/c64af0fd-42a5-4db3-b083-07dc8f7af80d/collection/28314605-2e5bb2b4-8a1a-4d9a-8f41-32c635aebf56?action=share&source=collection_link&creator=28314605"
+	},
+	"item": [
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "change password",
+					"item": [
+						{
+							"name": "change password request",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\":\"devUser\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{USERS_URL}}/changePassword",
+									"host": [
+										"{{USERS_URL}}"
+									],
+									"path": [
+										"changePassword"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "change password",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"token\":1635,\n    \"password\":\"password\",\n    \"email\":\"autob214@gmail.com\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{USERS_URL}}/changePassword",
+									"host": [
+										"{{USERS_URL}}"
+									],
+									"path": [
+										"changePassword"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "forgot password",
+					"item": [
+						{
+							"name": "forgot password request",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\":\"autob214@gmail.com\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{USERS_URL}}/forgotPassword",
+									"host": [
+										"{{USERS_URL}}"
+									],
+									"path": [
+										"forgotPassword"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "change password Copy",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"token\":1635,\n    \"password\":\"password\",\n    \"email\":\"autob214@gmail.com\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{USERS_URL}}/changePassword",
+									"host": [
+										"{{USERS_URL}}"
+									],
+									"path": [
+										"changePassword"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Create User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\":\"devUser\",\n    \"email\":\"autob214@gmail.com\",\n    \"username\":\"devUser\",\n    \"password\":\"password\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{USERS_URL}}",
+							"host": [
+								"{{USERS_URL}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify user",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"token\":5686,\n    \"userId\":\"66428d121b787e35107fad25\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{USERS_URL}}",
+							"host": [
+								"{{USERS_URL}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"autob214@gmail.com\",\n    \"password\":\"password\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{USERS_URL}}/login",
+							"host": [
+								"{{USERS_URL}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "habits",
+			"item": [
+				{
+					"name": "create habits",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Morning Jog\",\n  \"frequency\": {\n    \"type\": \"custom\",\n    \"customDays\": [\"mon\", \"tue\", \"wed\", \"thu\", \"fri\"]\n  },\n  \"notifications\": [\n    {\n      \"enabled\": true,\n      \"time\": \"06:00\"\n    }\n  ],\n  \"userId\": \"66428d121b787e35107fad25\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HABITS_URL}}",
+							"host": [
+								"{{HABITS_URL}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "edit habits",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Evening Jog\",\n  \"frequency\": {\n    \"type\": \"custom\",\n    \"customDays\": [\"mon\", \"tue\"]\n  },\n  \"notifications\": [\n    {\n      \"enabled\": true,\n      \"time\": \"09:00\"\n    }\n  ]\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HABITS_URL}}/6642944d7bcaf2063a259962",
+							"host": [
+								"{{HABITS_URL}}"
+							],
+							"path": [
+								"6642944d7bcaf2063a259962"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete habits",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{HABITS_URL}}/6642944d7bcaf2063a259962",
+							"host": [
+								"{{HABITS_URL}}"
+							],
+							"path": [
+								"6642944d7bcaf2063a259962"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get habits by user",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{HABITS_URL}}/user/66428d121b787e35107fad25",
+							"host": [
+								"{{HABITS_URL}}"
+							],
+							"path": [
+								"user",
+								"66428d121b787e35107fad25"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "logs",
+			"item": [
+				{
+					"name": "download logs",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\":\"66428d121b787e35107fad25\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{LOGS_URL}}/downloadLogs",
+							"host": [
+								"{{LOGS_URL}}"
+							],
+							"path": [
+								"downloadLogs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get recent logs",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\":\"66428d121b787e35107fad25\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{LOGS_URL}}/getRecentLogs",
+							"host": [
+								"{{LOGS_URL}}"
+							],
+							"path": [
+								"getRecentLogs"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GET base_url",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}",
+					"host": [
+						"{{BASE_URL}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
