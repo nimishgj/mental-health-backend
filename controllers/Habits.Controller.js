@@ -11,28 +11,6 @@ exports.createHabit = async (request, response) => {
     try {
         const { name, frequency, notifications, userId } = request.body;
 
-        const errors = {}
-
-        if (!name) {
-            errors.name = MESSAGE.NAME_NOT_PROVIDED;
-        }
-        if (!frequency) {
-            errors.frequency = MESSAGE.FREQUENCY_NOT_PROVIDED;
-        }
-        if (!notifications) {
-            errors.notifications = MESSAGE.NOTIFICATIONS_NOT_PROVIDED;
-        }
-        if (!userId) {
-            errors.userId = MESSAGE.USERID_NOT_PROVIDED;
-        }
-        if (Object.keys(errors).length > 0) {
-            return response.status(HTTP_STATUS.BAD_REQUEST).json({
-                status: false,
-                message: errors,
-            });
-
-        }
-
         const user = await Users.findOne({ _id: userId });
         if (!user) return sendError(response, MESSAGE.USER_NOT_FOUND);
         const newHabit =  await HabitsService.createHabit({
@@ -70,17 +48,6 @@ exports.editHabit = async (request, response) => {
     try {
         const { name, frequency, notifications } = request.body;
         const habitId = request.params.id;
-
-        const errors = {};
-        if (!name && !frequency && !notifications) {
-            errors.general = MESSAGE.CANNOT_EDIT_MESSAGE;
-        }
-        if (Object.keys(errors).length > 0) {
-            return response.status(HTTP_STATUS.BAD_REQUEST).json({
-                status: false,
-                message: errors,
-            });
-        }
 
         const updatedHabit = await HabitsService.editHabit(habitId, { name, frequency, notifications });
 
