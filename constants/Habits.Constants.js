@@ -1,8 +1,4 @@
 exports.MESSAGE ={
-    NAME_NOT_PROVIDED:"Please provide a name",
-    FREQUENCY_NOT_PROVIDED:"Please provide a frequency",
-    NOTIFICATIONS_NOT_PROVIDED:"Please provide a notifications",
-    USERID_NOT_PROVIDED:"Please provide a user id",
     USER_NOT_FOUND:"No such user found.",
     HABIT_CREATED:"Habit Created Successfully",
     HABIT_CREATION_ERROR:`Error Occured While Creating a Habit`,
@@ -13,7 +9,8 @@ exports.MESSAGE ={
     HABIT_DELETED:"Habit deleted successfully",
     NO_HABITS_FOR_PROVIDED_USER:"No habits found for the Provided UserId",
     HABITS_FETCHED:"Habits fetched successfully",
-    HABIT_FETCHING_ERROR:`Error occurred while fetching habits`
+    HABIT_FETCHING_ERROR:`Error occurred while fetching habits`,
+    INVALID_USER_ID:'Invalid UserId provided'
 }
 
 exports.CONTROLLER = {

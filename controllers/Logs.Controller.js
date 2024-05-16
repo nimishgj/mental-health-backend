@@ -1,26 +1,15 @@
 const fs = require("fs");
-const logModel = require("../models/Log.model"); // Replace with the actual path to your ErrorModel file
 const createCsvWriter = require("csv-writer").createObjectCsvWriter;
 
-const Users = require("../models/User.model");
-
-const { log } = require("../middleware/logger/logger");
+const logModel = require("../models/Log.model");
+const { logRequestInfo, logRequestError } = require("../middleware/logger/logger");
 const { sendError, sendServerError } = require("../util/Responses");
-
 const { MESSAGE} = require("../constants/Logs.Constants")
 const { CONTROLLER} = require("../constants/Logs.Constants")
-
-const { LOG_TYPE } = require("../constants/LogType");
-const { LOG_LEVEL } = require("../constants/LogLevel");
 const { HTTP_STATUS } = require("../constants/HttpStatus");
 
 exports.sendLogFile = async (request, response) => {
   try {
-    const userId = request.body.userId
-    const user = await Users.findById({ _id: userId });
-    if (!user) {
-      sendError(response, MESSAGE.USER_NOT_FOUND);
-    }
     const logs = await logModel.find({});
 
     if (logs.length === 0) {
@@ -39,25 +28,7 @@ exports.sendLogFile = async (request, response) => {
       ],
     });
 
-    log(
-      request,
-      `${user.name} Downloaded the Log File`,
-      CONTROLLER.SEND_LOG_FILE,
-      LOG_TYPE.REQUEST,
-      LOG_LEVEL.INFO
-    );
-
-    const logsWithAdditionalContext = logs.map((log) => {
-      const context = `IP: ${log.context.ip}, Country: ${log.context.country}, City: ${log.context.city}, Device Type: ${log.context.deviceType}, Browser: ${log.context.browser}, Platform: ${log.context.platform}, OS: ${log.context.os}, Device: ${log.context.device}`;
-      return {
-        logInfo: log.logInfo,
-        filename: log.filename,
-        createdAt: log.createdAt,
-        type: log.type,
-        level: log.level,
-        context,
-      };
-    });
+    logRequestInfo( request, `${request.user.name} Downloaded the Log File`, CONTROLLER.SEND_LOG_FILE );
 
     csvWriter
       .writeRecords(logs)
@@ -74,59 +45,29 @@ exports.sendLogFile = async (request, response) => {
       })
       .catch((error) => {
         console.log(error);
-        log(
-          request,
-          MESSAGE.DOWNLOAD_ERROR,
-          CONTROLLER.SEND_LOG_FILE_CSV,
-          LOG_TYPE.REQUEST,
-          LOG_LEVEL.ERROR
-        );
+        logRequestError( request, MESSAGE.DOWNLOAD_ERROR, CONTROLLER.SEND_LOG_FILE_CSV );
         sendServerError(response);
       });
   } catch (error) {
     console.log(error);
-    log(
-      request,
-      MESSAGE.DOWNLOAD_ERROR,
-      CONTROLLER.SEND_LOG_FILE,
-      LOG_TYPE.REQUEST,
-      LOG_LEVEL.ERROR
-    );
+    logRequestError( request, MESSAGE.DOWNLOAD_ERROR, CONTROLLER.SEND_LOG_FILE );
     sendServerError(response);
   }
 };
 
 exports.getRecentLogs = async (request, response) => {
   try {
-    const userId = request.body.userId;
-
-    const user = await Users.findById({ _id: userId });
-    if (!user) {
-      sendError(response, MESSAGE.USER_NOT_FOUND);
-    }
-
     const logs = await logModel.find({}).sort({ _id: -1 }).limit(10);
     if (logs.length === 0) {
       sendError(response, "No Logs found");
     }
 
-    log(
-      request,
-      `${user.name} Fetched Recent 10 Logs`,
-      CONTROLLER.GET_RECENT_LOGS,
-      LOG_TYPE.REQUEST,
-      LOG_LEVEL.INFO
-    );
+    logRequestInfo( request, `${request.user.name} Fetched Recent 10 Logs`, CONTROLLER.GET_RECENT_LOGS );
 
     response.status(HTTP_STATUS.OK).json({ success: true, logs });
   } catch (error) {
-    log(
-      request,
-      MESSAGE.FETCH_ERROR,
-      CONTROLLER.GET_RECENT_LOGS,
-      LOG_TYPE.REQUEST,
-      LOG_LEVEL.ERROR
-    );
+    console.log(error)
+    logRequestError( request, MESSAGE.FETCH_ERROR, CONTROLLER.GET_RECENT_LOGS );
     sendServerError(response);
   }
 };

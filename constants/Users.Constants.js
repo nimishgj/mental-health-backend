@@ -33,6 +33,7 @@ exports.MESSAGE ={
     NOTIFICATION_PREFERENCE_NOT_PROVIDED: "Please provide a notification preference",
     NOTIFICATION_PREFERENCE_CHANGED:"Notification Preference Changed Successfully",
     NOTIFICATION_PREFERENCE_CHANGE_ERROR:`Error Occured While Changing Notification Preference`,
+    INCORRECT_CREDENTIALS: 'Incorrect email and password provied'
 }
 
 exports.CONTROLLER = {

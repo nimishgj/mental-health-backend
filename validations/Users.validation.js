@@ -4,13 +4,19 @@ exports.userLoginSchema = yup.object({
   password: yup.string().min(8).max(12).required(),
   email: yup.string().email().required(),
 })
-
+  
 exports.userSchema = yup.object({
-  name: yup.string().required(),
-  username: yup.string().required(),
-  password: yup.string().min(8).max(12).required(),
-  email: yup.string().email().required()
-})
+  userDetails: yup.object().shape({
+    name: yup.string().required('Name is required'),
+    username: yup.string().required('Username is required'),
+    password: yup.string()
+      .min(8, 'Password must be at least 8 characters long')
+      .max(12, 'Password must be at most 12 characters long')
+      .required('Password is required'),
+    email: yup.string().email('Invalid email format').required('Email is required'),
+  }),
+});
+
 
 exports.userVerificationSchema = yup.object({
   userId: yup.string().required(),

@@ -1,3 +1,4 @@
+const { response } = require("express");
 const { HTTP_STATUS } = require("../constants/HttpStatus");
 
 exports.sendError = (response, error, status = 300) => {
@@ -14,3 +15,8 @@ exports.sendServerError = (response) => {
   response.status(HTTP_STATUS.INTERNAL_SERVER_ERROR);
   response.json({ success: false, error: "Internal Server Error" });
 };
+
+exports.sendUserNotFoundError = (response) => {
+  response.status(HTTP_STATUS.BAD_REQUEST);
+  response.json({success:false, error:'No Such User Found'})
+}
