@@ -16,7 +16,7 @@ services:
   express-app:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.development
     container_name: mental_health_app
     ports:
       - "3000:3000"
@@ -25,13 +25,13 @@ services:
       DB_USER: root
       DB_PASSWORD: example
       DB_PORT: 27017
-      NODE_ENV: ${NODE_ENV}
+      NODE_ENV: production
       MAIL_USERNAME: ${MAIL_USERNAME}
       MAIL_PASSWORD: ${MAIL_PASSWORD}
     depends_on:
       - mongo
     volumes:
-      - .:/home/node/app 
+      - .:/usr/src/app 
 
   mongo-express:
     image: mongo-express

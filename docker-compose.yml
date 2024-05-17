@@ -16,7 +16,7 @@ services:
   express-app:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.development
     container_name: mental_health_app
     ports:
       - "3000:3000"
@@ -31,7 +31,7 @@ services:
     depends_on:
       - mongo
     volumes:
-      - .:/home/node/app 
+      - .:/usr/src/app 
 
   mongo-express:
     image: mongo-express
