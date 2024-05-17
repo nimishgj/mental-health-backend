@@ -14,7 +14,7 @@ router.route("/changePassword").post(validate(changePasswordSchema),validateUser
 
 router.route("/forgotPassword").get(validate(forgotPasswordRequestSchema),validateUserBy('email'), forgotPasswordRequest)
 
-router.route("/login").post(signUpSignInLimiter,validate(userLoginSchema), login)
+router.route("/login").post(signUpSignInLimiter,validate(userLoginSchema),validateUserBy('email'), login)
 
 router.route("/:id").delete(validate(deleteUserSchema),validateUserBy('email'), deleteUser)
 

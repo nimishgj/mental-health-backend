@@ -1,7 +1,6 @@
 const Users = require('../models/User.model');
 const { createUserVerifcation } = require('../util/helpers/Users.helper');
 const userVerification = require("../models/UserVerification.model");
-const { sendError } = require('../util/Responses');
 exports.getUserById = async(userId) => {
   try {
     const user = await Users.findById(userId);
@@ -47,13 +46,10 @@ exports.updateNotificationPreference = async(user, notificationPreference) => {
 
 exports.loginUser = async(email, password) => {
   try {
-    const user = this.getUserByEmail(email);
+    const user = await this.getUserByEmail(email);
     const isMatch = user.password === password;
     if (!isMatch) {
-      return response.status(HTTP_STATUS.BAD_REQUEST).json({
-        status: false,
-        message: MESSAGE.INCORRECT_PASSWORD,
-      });
+      throw new Error("Invalid Password");
     } 
   } catch (error) {
     console.log(error)

@@ -38,6 +38,12 @@ exports.login = async (request, response) => {
     });
   
   } catch (error) {
+    if(error.message === "Invalid Password"){
+      return response.status(HTTP_STATUS.BAD_REQUEST).json({
+        status: false,
+        message: MESSAGE.INCORRECT_PASSWORD,
+      });
+    }
     console.log(error);
     logLoginError( request, MESSAGE.USER_LOGIN_ERROR, CONTROLLER.LOGIN );
     sendServerError(response);
